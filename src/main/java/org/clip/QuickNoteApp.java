@@ -55,8 +55,8 @@ public class QuickNoteApp {
 //        noteFrame.setFocusableWindowState(false); // Prevent it from losing focus when clicking elsewhere
 
         // FIXME: I use Listener to start QuickNote Panel, then if I click close button lies in right corner, it will shut down the Listener as well.
-        // TODO: use multi-thread to manipulate it? sub-thread
-        noteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit the application when the main window is closed
+        // TODO: use multi-thread to manipulate it? sub-thread or comment this function.
+//        noteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit the application when the main window is closed
         // 设置面板大小可调整
         noteFrame.setResizable(true);
 

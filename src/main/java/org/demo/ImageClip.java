@@ -1,4 +1,4 @@
-package org.clip;
+package org.demo;
 
 import javax.swing.*;
 import java.awt.*;

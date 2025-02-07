@@ -1,4 +1,4 @@
-package org.clip;
+package org.demo;
 
 /* JNativeHook: Global keyboard and mouse listeners for Java.
  * Copyright (C) 2006-2021 Alexander Barker.  All Rights Reserved.

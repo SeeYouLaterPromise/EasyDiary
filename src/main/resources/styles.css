@@ -1,0 +1,15 @@
+/* 样式文件 styles.css */
+.label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #333;
+}
+
+.button {
+    -fx-background-color: #e0e0e0;
+    -fx-font-size: 12px;
+}
+
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+}

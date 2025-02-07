@@ -2,9 +2,10 @@ package org.clip;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.Locale;
 
 public class TxtFileManager {
-    private String StoreDir = "src/main/resources/";
+    private String StoreDir = "src/main/resources/txtData/";
     private String tempPath = "temp.txt";
     private String filePath;
 
@@ -13,17 +14,18 @@ public class TxtFileManager {
     }
 
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
-    private void getDate() {
-        LocalDate currentDate = LocalDate.now();
-        int year = currentDate.getYear();
-        int month = currentDate.getMonthValue();
-        int day = currentDate.getDayOfMonth();
+    private void DateToPath(LocalDate date) {
+        System.out.println(date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        int day = date.getDayOfMonth();
 //        System.out.println("Year: " + year);
 //        System.out.println("Month: " + month);
 //        System.out.println("Day: " + day);
         // create the aimed directory hierarchy
         StoreDir = StoreDir + year + '/' + month + '/';
         tempPath = paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
+        filePath = StoreDir + tempPath;
     }
 
     private void ensureDirectory() {
@@ -64,8 +66,12 @@ public class TxtFileManager {
         ensure();
     }
     TxtFileManager () {
-        getDate();
-        filePath = StoreDir + tempPath;
+        DateToPath(LocalDate.now());
+        ensure();
+    }
+
+    TxtFileManager (LocalDate date) {
+        DateToPath(date);
         ensure();
     }
 
@@ -110,6 +116,22 @@ public class TxtFileManager {
         return content.toString().split("#");
     }
 
+    // 读取文件内容的方法
+    public String readFileContent() {
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n"); // 将每行文本添加到 StringBuilder 中
+            }
+        } catch (IOException e) {
+            content.append("Error reading file: ").append(e.getMessage());
+        }
+
+        return content.toString();  // 返回读取的文本内容
+    }
+
     public void setStoreDir(String Dir) {
         StoreDir = Dir;
         filePath = StoreDir + tempPath;
@@ -129,7 +151,7 @@ public class TxtFileManager {
     }
 
     public static void main(String[] args) {
-        new TxtFileManager().getDate();
+        new TxtFileManager().DateToPath(LocalDate.now());
 //        String[] lines = new TxtFileManager("nihao.txt").ReadFromFile();
     }
 }

@@ -70,6 +70,20 @@ public class GlobalKeyListener implements NativeKeyListener {
 //        System.out.println("Key Typed: " + e.paramString());
     }
 
+    public static void LearningMode() {
+        System.out.println("Enter Learning Mode!");
+        try {
+            GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+
+            System.exit(1);
+        }
+        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+    }
+
     public static void main(String[] args) {
         try {
             GlobalScreen.registerNativeHook();
@@ -80,7 +94,6 @@ public class GlobalKeyListener implements NativeKeyListener {
 
             System.exit(1);
         }
-
         GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
     }
 }
