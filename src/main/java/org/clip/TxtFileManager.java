@@ -1,25 +1,76 @@
 package org.clip;
 
 import java.io.*;
+import java.time.LocalDate;
 
 public class TxtFileManager {
     private String StoreDir = "src/main/resources/";
-
     private String tempPath = "temp.txt";
-    private String filePath = StoreDir + tempPath;
+    private String filePath;
+
+    private String paddingZeroAhead(int num) {
+        return num > 10 ? String.valueOf(num) : "0" + num;
+    }
+
+    // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
+    private void getDate() {
+        LocalDate currentDate = LocalDate.now();
+        int year = currentDate.getYear();
+        int month = currentDate.getMonthValue();
+        int day = currentDate.getDayOfMonth();
+//        System.out.println("Year: " + year);
+//        System.out.println("Month: " + month);
+//        System.out.println("Day: " + day);
+        // create the aimed directory hierarchy
+        StoreDir = StoreDir + year + '/' + month + '/';
+        tempPath = paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
+    }
+
+    private void ensureDirectory() {
+        File directory = new File(StoreDir);
+        if (!directory.exists()) {
+            boolean res = directory.mkdirs();
+            if (!res) {
+                System.err.println("Cant ensure directory: " + StoreDir);
+            }
+        }
+    }
+
+    private void ensureFile() {
+        File file = new File(filePath);
+        try {
+            if (!file.exists()) {
+                boolean res = file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void ensure() {
+        ensureDirectory();
+        ensureFile();
+    }
 
     TxtFileManager(String secondPath) {
         tempPath = secondPath;
         filePath = StoreDir + tempPath;
+        ensure();
     }
     TxtFileManager(String directory, String secondPath) {
         StoreDir = directory;
         tempPath = secondPath;
         filePath = StoreDir + tempPath;
+        ensure();
+    }
+    TxtFileManager () {
+        getDate();
+        filePath = StoreDir + tempPath;
+        ensure();
     }
 
     public void WriteToFile (String entry) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(entry);
             writer.newLine();
             System.out.println("Entry written to file successfully.");
@@ -30,7 +81,9 @@ public class TxtFileManager {
 
     public void WriteToFile (String[] records) {
         // 使用 BufferedWriter 写入文本到文件
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        // 覆盖模式：new FileWriter(filePath) 默认会覆盖文件内容。
+        // 追加模式：new FileWriter(filePath, true) 通过传递 true 启用追加模式，写入的新内容将追加到文件的末尾。
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             for (String entry : records) {
                 writer.write(entry); // 写入内容
                 writer.newLine(); // 添加换行
@@ -76,6 +129,7 @@ public class TxtFileManager {
     }
 
     public static void main(String[] args) {
-        String[] lines = new TxtFileManager("nihao.txt").ReadFromFile();
+        new TxtFileManager().getDate();
+//        String[] lines = new TxtFileManager("nihao.txt").ReadFromFile();
     }
 }

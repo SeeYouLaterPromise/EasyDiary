@@ -11,6 +11,7 @@ public class StringClip {
     private static int size = 0;
     private static Toolkit toolkit;
     private static Clipboard clipboard;
+    private static TxtFileManager txtFileManager = new TxtFileManager();
     StringClip() {
         toolkit = Toolkit.getDefaultToolkit();
         clipboard = toolkit.getSystemClipboard();
@@ -19,17 +20,6 @@ public class StringClip {
 
     public void excerpt() {
         toolkit.beep();
-        // Now simulate the Ctrl + C press using Robot to trigger the system's copy action
-        // The issue of this method lies in which the recycle revoke would be generated if your trigger way is the same.
-//        try {
-//            Robot robot = new Robot();
-//            robot.keyPress(KeyEvent.VK_CONTROL);  // Press the CTRL key
-//            robot.keyPress(KeyEvent.VK_C);       // Press the C key
-//            robot.keyRelease(KeyEvent.VK_C);     // Release the C key
-//            robot.keyRelease(KeyEvent.VK_CONTROL); // Release the CTRL key
-//        } catch (AWTException ex) {
-//            ex.printStackTrace();
-//        }
 
         // excerpt函数线程貌似快于系统复制功能函数，所有我们需要小等一下。
         // Add a small delay to allow the system to copy the selected text to the clipboard
@@ -47,10 +37,11 @@ public class StringClip {
                 return;
             }
             // Remove all types of newlines (\n and \r\n)
-            String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
+//            String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
+            String entry = "[Excerpt]:\n" + text;
+            txtFileManager.WriteToFile(entry);
 
-
-            records[size++] = cleanedText;
+            records[size++] = text;
 //            System.out.println(text);
 
         } catch (IOException | UnsupportedFlavorException e) {

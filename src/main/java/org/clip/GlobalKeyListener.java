@@ -36,7 +36,7 @@ public class GlobalKeyListener implements NativeKeyListener {
                 if (CTRL) {
                     CTRL = false;
                     System.out.println("Call on a panel for writing.");
-                    stringClip.showRecords();
+                    QuickNoteApp.getPanel();
                 }
                 // TODO: Call on a panel for user to write down.
                 break;
@@ -53,7 +53,8 @@ public class GlobalKeyListener implements NativeKeyListener {
                 break;
             case NativeKeyEvent.VC_ENTER:
                 if (CTRL) {
-
+                    CTRL = false;
+                    QuickNoteApp.Submit();
                 }
             default:
                 CTRL = false;

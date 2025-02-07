@@ -1,0 +1,19 @@
+[Excerpt]:
+import java.time.LocalDate;
+
+public class DateExample {
+    public static void main(String[] args) {
+        // 获取当前日期（年月日）
+        LocalDate currentDate = LocalDate.now();
+
+        int year = currentDate.getYear();          // 年
+        int month = currentDate.getMonthValue();   // 月 (1-12)
+        int day = currentDate.getDayOfMonth();     // 日 (1-31)
+
+        System.out.println("Year: " + year);
+        System.out.println("Month: " + month);
+        System.out.println("Day: " + day);
+    }
+}
+[Thought]:
+Test storage.

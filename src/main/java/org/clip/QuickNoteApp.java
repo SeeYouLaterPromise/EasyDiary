@@ -7,18 +7,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+// Singleton
 public class QuickNoteApp {
     // 变量来存储拖动过程中的鼠标位置
     private static int xMouse, yMouse;
     // indicates the status of the panel (fix or not)
     private static boolean fixed = true;
     private static final JTextArea textArea = new JTextArea();
-    private static final String storeDir = "src/main/resources/";
-    private static final String storeFileName = "0206.txt";
-    private static TxtFileManager txtFileManager = new TxtFileManager(storeDir, storeFileName);
+    private static TxtFileManager txtFileManager = new TxtFileManager();
     private static boolean submitted = false;
 
-    // TODO: Design memory function to prevent interrupt?
+    // 单例模式的核心：私有化构造器，避免外部创建多个实例。
+    private QuickNoteApp() { showQuickNotePanel(); }
+
+    // 饿汉式单例（Eager Singleton）类加载时就实例化
+//    private static final QuickNoteApp panel = new QuickNoteApp();
+
+    // 懒汉式单例（Lazy Singleton）按需加载 without keyword of final.
+    private static QuickNoteApp panel = null;
+
+    // 供外界调用这一唯一的panel.
+    public static void getPanel() {
+        if (panel == null) {
+            panel = new QuickNoteApp();
+        }
+    }
+
+
+    // TODO: Design memory function to prevent interrupt happening?
 
     public static void main(String[] args) {
 
@@ -31,12 +47,15 @@ public class QuickNoteApp {
     }
 
     // 快速记录面板
-    public static void showQuickNotePanel() {
+    private static void showQuickNotePanel() {
         // 创建一个新的 JFrame 用作快速记录面板
         JFrame noteFrame = new JFrame("Quick Note");
         noteFrame.setSize(300, 300);
         noteFrame.setAlwaysOnTop(true); // Make sure the window stays on top of other windows
 //        noteFrame.setFocusableWindowState(false); // Prevent it from losing focus when clicking elsewhere
+
+        // FIXME: I use Listener to start QuickNote Panel, then if I click close button lies in right corner, it will shut down the Listener as well.
+        // TODO: use multi-thread to manipulate it? sub-thread
         noteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit the application when the main window is closed
         // 设置面板大小可调整
         noteFrame.setResizable(true);
@@ -96,18 +115,23 @@ public class QuickNoteApp {
         noteFrame.setVisible(true);
     }
 
+    public static void Submit() {
+        String text = textArea.getText();
+//        String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
+        String entry = "[Thought]:\n" + text;
+        txtFileManager.WriteToFile(entry);
+        // TODO: add Date to mark it.
+        // after submitting and then undergo lost and gained, clear the textarea.
+        submitted = true;
+    }
+
     private static JButton getSubmitButton(JFrame noteFrame) {
         JButton button = new JButton("Submit");
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = textArea.getText();
-                System.out.println(textArea.getText());
-                String entry = "[Thought]: " + text;
-                txtFileManager.WriteToFile(entry);
-                // after submitting, clear the textarea.
-                textArea.setText("");
+                Submit();
             }
         });
         return button;
@@ -140,11 +164,15 @@ public class QuickNoteApp {
         // Add focus listener to handle placeholder removal and restoration
         textArea.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
+//                System.out.println("Here is foucs Gained.");
+
                 if (textArea.getText().equals("Enter your thoughts here...")) {
                     textArea.setText(""); // Clear the placeholder text
                     textArea.setForeground(Color.BLACK); // Set text color to black when the user types
+                } else if (submitted) {
+                    textArea.setText("");
+                    submitted = false;
                 }
-                System.out.println("Here is foucs Gained.");
             }
 
             public void focusLost(java.awt.event.FocusEvent evt) {
