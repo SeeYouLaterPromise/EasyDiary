@@ -25,9 +25,23 @@ public class LearningMode{
 
     private static Button quickNoteButton = null;
 
+    private static Button listenedButton = null;
+
     public static void updateQuickNoteButtonState() {
-        write = false;
-        quickNoteButton.setText("Write!");
+        if (write) {
+            write = false;
+            quickNoteButton.setText("Write!");
+            QuickNote.closePanel();
+        }
+    }
+
+    public static void updateListenerButtonState() {
+        if (listened) {
+            listened = false;
+            listenedButton.setText("Listen!");
+            GlobalKeyListener.shutDownMode();
+        }
+
     }
 
     private LearningMode () {
@@ -43,8 +57,11 @@ public class LearningMode{
 
     // TODO: 将这些子窗口抽象成一个父类，让这里的closePanel只用写一遍
     public static void closePanel() {
+        MainPanel.updateState();
         LmPanel.hide();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
+        updateQuickNoteButtonState();
+        updateListenerButtonState();
         learningMode = null;
     }
 
@@ -58,10 +75,7 @@ public class LearningMode{
             System.out.println("Hide Learning mode GUI.");
 //            System.exit(0);
             we.consume(); // Prevent the default behavior (window closing)
-            stage.hide();
-            MainPanel.updateState();
-            // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
-            learningMode = null;
+            closePanel();
         });
 
         stage.setAlwaysOnTop(true);
@@ -72,8 +86,8 @@ public class LearningMode{
         buttonBox.setAlignment(Pos.CENTER);
 
         Button fixedButton = getFixedButton(stage);
-        Button listenedButton = getListenerButton(stage);
-        quickNoteButton = getQuickNoteButton(stage);
+        listenedButton = getListenerButton();
+        quickNoteButton = getQuickNoteButton();
 
         buttonBox.getChildren().addAll(fixedButton, listenedButton, quickNoteButton);
         root.setBottom(buttonBox);
@@ -119,7 +133,7 @@ public class LearningMode{
         return fixedButton;
     }
 
-    private static Button getListenerButton(Stage stage) {
+    private static Button getListenerButton() {
         Button button = new Button("Listen!");
 
         button.setOnAction(e -> {
@@ -136,7 +150,7 @@ public class LearningMode{
         return button;
     }
 
-    private static Button getQuickNoteButton(Stage stage) {
+    private static Button getQuickNoteButton() {
         Button button = new Button("Write!");
 
         button.setOnAction(e -> {

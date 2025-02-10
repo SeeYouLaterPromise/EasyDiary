@@ -85,12 +85,13 @@ public class GlobalKeyListener implements NativeKeyListener {
         GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
     }
 
+    // FIXME: IF you shutdown immediately after startUp, there is something would be caught, which means that register have not been finished.
     public static void shutDownMode() {
         try {
             System.out.println("Exit the Listening mode.");
             GlobalScreen.unregisterNativeHook();
         } catch (NativeHookException nativeHookException) {
-            nativeHookException.printStackTrace();
+            System.err.println(nativeHookException.getMessage());
         }
     }
 

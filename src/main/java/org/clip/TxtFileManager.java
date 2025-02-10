@@ -15,7 +15,7 @@ public class TxtFileManager {
 
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
     private void DateToPath(LocalDate date) {
-        System.out.println(date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
+        System.out.println("Here is TxtFileManager Class, you new an Instance: " + date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
         int year = date.getYear();
         int month = date.getMonthValue();
         int day = date.getDayOfMonth();

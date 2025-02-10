@@ -1,4 +1,4 @@
-package org.clip;
+package org.demo;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;

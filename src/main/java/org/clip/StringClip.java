@@ -11,7 +11,6 @@ public class StringClip {
     private static int size = 0;
     private static Toolkit toolkit;
     private static Clipboard clipboard;
-    private static TxtFileManager txtFileManager = new TxtFileManager();
     StringClip() {
         toolkit = Toolkit.getDefaultToolkit();
         clipboard = toolkit.getSystemClipboard();
@@ -39,9 +38,15 @@ public class StringClip {
             // Remove all types of newlines (\n and \r\n)
 //            String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
             String entry = "[Excerpt]:\n" + text;
+            TxtFileManager txtFileManager = new TxtFileManager();
+
             txtFileManager.WriteToFile(entry);
 
             records[size++] = text;
+
+            // Avoid the index out of bound issue.
+            size = size % 50;
+
 //            System.out.println(text);
 
         } catch (IOException | UnsupportedFlavorException e) {
