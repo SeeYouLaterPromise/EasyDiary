@@ -1,4 +1,4 @@
-package org.demo;
+package org.demo.GUIdemo;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;

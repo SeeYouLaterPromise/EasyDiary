@@ -38,5 +38,26 @@ version 0 for `.txt` file storage.
 - `day` is data file.
 
 
+## LLM API
+How to revoke the api of deepseek or openai.
+If you post request via HTTP, you should do encoding with `UTF-8` for chinese words.
+
 ## Future work: Shadowing method for english learning
 User can input `sentences`, then we will help you transform `text` into `audio` for you to shadowing-ly read.
+
+### TTSs I tried in 2025.02.08
+- Java Maven can configure `FreeTTS` and `MaryTTS`, but I had not fetched the chinese language support.
+
+- Morilla TTS
+  - pip install TTS, then, input model file (.pth file) and configuration file (.json file). However, something wrong!
+  - git clone TTS source code, but pip install -e . this step, I met some issues.
+
+- gTTS: some network issue, I guess the reason behind lies in the package issue. 我在下载`gTTS`的时候，就报错啦，要求 requests==2.25.1 以及 numpy==1.21.5。
+>这种冲突有时可能不会立即导致错误，但可能在使用 d2l 或与其相关的功能时引发一些意外问题，尤其是 requests 和 numpy 这两个包是很多机器学习和数据处理任务的基础。
+如果您正在使用 d2l 和 gTTS，这些依赖冲突可能会影响到您运行代码的稳定性和功能，特别是在涉及网络请求和数据处理时。
+
+- pyttsx3: Successful!
+  - Use python to serve as `server`.
+  - `uvicorn voice:app --reload` (`uvicorn <pyfilename>:app --reload --host 0.0.0.0 --port 8001`)
+  - .java sends the request.
+  但有一说一，这个发音很机械化啊。。还得找别的解决方案

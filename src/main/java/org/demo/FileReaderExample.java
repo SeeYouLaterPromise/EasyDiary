@@ -7,7 +7,7 @@ public class FileReaderExample {
 
     public static void main(String[] args) {
         // 获取 resources 文件夹下的 txt 文件
-        InputStream inputStream = FileReaderExample.class.getResourceAsStream("/data.txt");
+        InputStream inputStream = FileReaderExample.class.getResourceAsStream("/api_key.txt");
 
         if (inputStream != null) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {

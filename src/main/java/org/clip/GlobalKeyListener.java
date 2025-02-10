@@ -3,9 +3,11 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import org.demo.GUIdemo.QuickNoteApp;
 
-import java.awt.event.KeyEvent;
-
+/**
+ * 快捷键 全局监听 方便用户释放鼠标，使用键盘快速调用
+ */
 public class GlobalKeyListener implements NativeKeyListener {
     private boolean CTRL = false;
     private final StringClip stringClip = new StringClip();
@@ -36,19 +38,18 @@ public class GlobalKeyListener implements NativeKeyListener {
                 if (CTRL) {
                     CTRL = false;
                     System.out.println("Call on a panel for writing.");
-                    QuickNoteApp.getPanel();
+                    // 启动子线程来启动 JavaFX 应用
+                    new Thread(() -> {
+                        // 在子线程中启动 JavaFX 应用
+//                        QuickNote.launch(args);
+                    }).start();
                 }
                 // TODO: Call on a panel for user to write down.
                 break;
             case NativeKeyEvent.VC_ESCAPE:
                 // To exit the learning mode.
                 if (CTRL) {
-                    try {
-                        System.out.println("Exit the Learning mode.");
-                        GlobalScreen.unregisterNativeHook();
-                    } catch (NativeHookException nativeHookException) {
-                        nativeHookException.printStackTrace();
-                    }
+                    shutDownMode();
                 }
                 break;
             case NativeKeyEvent.VC_ENTER:
@@ -70,8 +71,8 @@ public class GlobalKeyListener implements NativeKeyListener {
 //        System.out.println("Key Typed: " + e.paramString());
     }
 
-    public static void LearningMode() {
-        System.out.println("Enter Learning Mode!");
+    public static void startUpMode() {
+        System.out.println("Enter Listening Mode!");
         try {
             GlobalScreen.registerNativeHook();
         }
@@ -82,6 +83,15 @@ public class GlobalKeyListener implements NativeKeyListener {
             System.exit(1);
         }
         GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+    }
+
+    public static void shutDownMode() {
+        try {
+            System.out.println("Exit the Listening mode.");
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException nativeHookException) {
+            nativeHookException.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

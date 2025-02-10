@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 public class TxtFileManager {
-    private String StoreDir = "src/main/resources/txtData/";
+    private String StoreDir = "src/main/resources/";
     private String tempPath = "temp.txt";
     private String filePath;
 
     private String paddingZeroAhead(int num) {
-        return num > 10 ? String.valueOf(num) : "0" + num;
+        return num >= 10 ? String.valueOf(num) : "0" + num;
     }
 
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
@@ -23,7 +23,7 @@ public class TxtFileManager {
 //        System.out.println("Month: " + month);
 //        System.out.println("Day: " + day);
         // create the aimed directory hierarchy
-        StoreDir = StoreDir + year + '/' + month + '/';
+        StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/';
         tempPath = paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
         filePath = StoreDir + tempPath;
     }
@@ -54,7 +54,7 @@ public class TxtFileManager {
         ensureFile();
     }
 
-    TxtFileManager(String secondPath) {
+    public TxtFileManager(String secondPath) {
         tempPath = secondPath;
         filePath = StoreDir + tempPath;
         ensure();
@@ -65,7 +65,7 @@ public class TxtFileManager {
         filePath = StoreDir + tempPath;
         ensure();
     }
-    TxtFileManager () {
+    public TxtFileManager() {
         DateToPath(LocalDate.now());
         ensure();
     }

@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainPanel extends Application {
 
@@ -25,16 +27,36 @@ public class MainPanel extends Application {
 
     private TableView<String> tableView;
 
-    // 设置面板的初始位置为右下角
+    // get the size of device screen
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
     private Dimension screenSize = toolkit.getScreenSize();
+
+    // 主线程只用来管理UI，多线程来管理其他功能调用。
+    private ExecutorService executorService;
+
+    private static boolean ModeOn = false;
+    private static Button ModeOnButton = new Button("Start up learning mode!");
+
+    public static void updateState() {
+        ModeOn = false;
+        ModeOnButton.setText("Start up learning mode!");
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
+    public void stop() {
+        // 应用退出时关闭线程池
+        executorService.shutdown();
+    }
+
+    @Override
     public void start(Stage primaryStage) {
+        // 创建一个固定大小的线程池
+        executorService = Executors.newFixedThreadPool(3);
+
         // 设置根布局
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
@@ -81,14 +103,22 @@ public class MainPanel extends Application {
             }
         }
 
-        // 创建按钮并绑定点击事件
-        Button button = new Button("Learning Mode");
-        button.setOnAction(event -> {
-            GlobalKeyListener.LearningMode();
-        });  // 点击按钮关闭子窗口
+        // TODO: Learning start and stop management.
+
+        ModeOnButton.setOnAction(event -> {
+            if (ModeOn) {
+                ModeOnButton.setText("Start up learning mode!");
+                LearningMode.closePanel();
+            } else {
+                // remind user the status.
+                ModeOnButton.setText("Shut down learning mode.");
+                Stage LmStage = LearningMode.getLmPanel();
+            }
+            ModeOn = !ModeOn;
+        });
 
         // 将元素添加到根布局
-        root.getChildren().addAll(yearLabel, calendarGrid, tableView, button);
+        root.getChildren().addAll(yearLabel, calendarGrid, tableView, ModeOnButton);
 
         // 创建并设置场景
         Scene scene = new Scene(root, 1200, 800);
@@ -109,9 +139,6 @@ public class MainPanel extends Application {
         newStage.setWidth((double) screenSize.width / 2);  // 设置子窗口的宽度
         newStage.setHeight((double) screenSize.height / 2); // 设置子窗口的高度
 
-        // 设置子窗口的位置
-//        newStage.setX(500);  // 设置子窗口的 X 坐标（水平位置）
-//        newStage.setY(200);  // 设置子窗口的 Y 坐标（垂直位置）
 
         // 在子窗口中添加内容
         Label message = new Label("This is a new window.");
