@@ -1,6 +1,5 @@
 package org.clip;
 
-import Jampack.H;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -10,11 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
@@ -102,11 +98,6 @@ public class MainPanel extends Application {
         Label yearLabel = new Label(userName + "'s " + currentDate.getYear());
         yearLabel.setId("year-title");
 
-        // 将年份标签放入一个HBox中，并设置HBox的对齐方式
-        HBox yearHBox = new HBox(yearLabel);
-        yearHBox.setAlignment(Pos.CENTER);  // 设置HBox的内容居中
-        yearHBox.setPadding(new Insets(10));  // 可选：给HBox添加一些内边距，使其不至于紧贴边缘
-
         // 创建日期按钮（1-31）
         GridPane calendarGrid = createCalendarGrid();
 
@@ -159,8 +150,13 @@ public class MainPanel extends Application {
             ModeOn = !ModeOn;
         });
 
+        // 将年份标签放入一个HBox中，并设置HBox的对齐方式
+        VBox vBox = new VBox(yearLabel, calendarGrid);
+        vBox.setAlignment(Pos.CENTER);  // 设置HBox的内容居中
+        vBox.setPadding(new Insets(10));  // 可选：给HBox添加一些内边距，使其不至于紧贴边缘
+
         // 将元素添加到根布局
-        root.getChildren().addAll(yearHBox, calendarGrid, tableView, LearningModeOnButton);
+        root.getChildren().addAll(vBox, tableView, LearningModeOnButton);
 
         // 创建并设置场景
         Scene scene = new Scene(root, Width, Height);

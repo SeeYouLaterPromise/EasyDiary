@@ -1,11 +1,8 @@
 package org.clip;
 
-import Jampack.H;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -101,7 +98,7 @@ public class CertainDay {
             // function()
         });
 
-        TextArea textAreaRemark = getTextArea("Remark", true, Height * 0.8, Width / 2);
+        TextArea textAreaRemark = getTextArea("Remark", true, Height * 0.4, Width / 2);
 
         // 使用 VBox 来分别布局每个 Label 和 TextArea
         VBox vBoxContent = new VBox(15, labelContent, textAreaContent);

@@ -3,7 +3,7 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import org.demo.GUIdemo.QuickNoteApp;
+import javafx.application.Platform;
 
 /**
  * 快捷键 全局监听 方便用户释放鼠标，使用键盘快速调用
@@ -13,6 +13,8 @@ public class GlobalKeyListener implements NativeKeyListener {
     private final StringClip stringClip = new StringClip();
 
     // TODO: Could you find more efficient way to do combination?
+
+    private boolean QuickPanelOn = false;
     @Override
     public void nativeKeyPressed(NativeKeyEvent e) {
 //        System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
@@ -37,25 +39,36 @@ public class GlobalKeyListener implements NativeKeyListener {
             case NativeKeyEvent.VC_K:
                 if (CTRL) {
                     CTRL = false;
-                    System.out.println("Call on a panel for writing.");
-                    // 启动子线程来启动 JavaFX 应用
-                    new Thread(() -> {
-                        // 在子线程中启动 JavaFX 应用
-//                        QuickNote.launch(args);
-                    }).start();
+                    // 当按下Ctrl + K时，QuickPanel存在时，即关闭这个Panel.
+                    if (QuickPanelOn) {
+                        System.out.println("Shut down the existing panel");
+                        Platform.runLater(() -> {
+                            QuickPanelOn = false;
+                            QuickNote.closePanel();
+                        });
+                    } else {
+                        System.out.println("Call on a panel for writing.");
+                        // 调用JavaFX线程来更新GUI
+                        Platform.runLater(() -> {
+                            QuickPanelOn = true;
+                            QuickNote.getQuickNote();
+                        });
+                    }
                 }
                 // TODO: Call on a panel for user to write down.
                 break;
             case NativeKeyEvent.VC_ESCAPE:
                 // To exit the learning mode.
                 if (CTRL) {
+                    StringClip.playBeep();
                     shutDownMode();
                 }
                 break;
             case NativeKeyEvent.VC_ENTER:
                 if (CTRL) {
                     CTRL = false;
-                    QuickNoteApp.Submit();
+                    StringClip.playBeep();
+                    QuickNote.submit();
                 }
             default:
                 CTRL = false;

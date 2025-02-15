@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
@@ -30,17 +31,28 @@ public class LearningMode{
     /**
      * to accept the state of sub-layout.
      */
+
+    public static void toggleWrite() {
+        write = !write;
+    }
+
+    public static void toggleListened() {
+        listened = !listened;
+    }
+
     public static void updateQuickNoteButtonState() {
         if (write) {
-            write = false;
-            quickNoteButton.setText("Write!");
+            quickNoteButton.setText("Panel on!");
+        } else {
+            quickNoteButton.setText("Panel off.");
         }
     }
 
     public static void updateListenerButtonState() {
         if (listened) {
-            listened = false;
-            listenedButton.setText("Listen!");
+            listenedButton.setText("Listen on!");
+        } else {
+            listenedButton.setText("Listen off.");
         }
 
     }
@@ -82,15 +94,22 @@ public class LearningMode{
         stage.setAlwaysOnTop(true);
         BorderPane root = new BorderPane();
 
+        Label label = new Label("状态栏：");
+        HBox labelHBox = new HBox(label);
+        labelHBox.setAlignment(Pos.CENTER);
+
         // Create Buttons (Submit & Fix)
-        HBox buttonBox = new HBox(10);
-        buttonBox.setAlignment(Pos.CENTER);
+
 
         Button fixedButton = getFixedButton(stage);
         listenedButton = getListenerButton();
         quickNoteButton = getQuickNoteButton();
 
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().addAll(fixedButton, listenedButton, quickNoteButton);
+
+        root.setCenter(labelHBox);
         root.setBottom(buttonBox);
 
         // Set the stage and show
@@ -114,7 +133,7 @@ public class LearningMode{
     }
 
     private static Button getFixedButton(Stage stage) {
-        Button fixedButton = new Button("UnFix.");
+        Button fixedButton = new Button("Fixed!");
 
         // Fix/Unfix button functionality
         fixedButton.setOnAction(e -> {
@@ -122,11 +141,10 @@ public class LearningMode{
             if (fixed) {
                 // if it has been fixed already, toggle it.
                 stage.setAlwaysOnTop(false);
-                // remind user the opposite action.
-                fixedButton.setText("Fix!");
+                fixedButton.setText("UnFixed.");
             } else {
                 stage.setAlwaysOnTop(true);
-                fixedButton.setText("UnFix.");
+                fixedButton.setText("Fixed!");
             }
             // toggle the status
             fixed = !fixed;
@@ -135,34 +153,38 @@ public class LearningMode{
     }
 
     private static Button getListenerButton() {
-        Button button = new Button("Listen!");
+        Button button = new Button("Listen off.");
 
         button.setOnAction(e -> {
+            toggleListened();
+
+            updateListenerButtonState();
+
             if (listened) {
-                button.setText("Listen!");
-                GlobalKeyListener.shutDownMode();
-            } else {
-                button.setText("shut.");
                 GlobalKeyListener.startUpMode();
+            } else {
+                GlobalKeyListener.shutDownMode();
             }
-            listened = !listened;
         });
 
         return button;
     }
 
     private static Button getQuickNoteButton() {
-        Button button = new Button("Write!");
+        Button button = new Button("Panel off.");
 
         button.setOnAction(e -> {
+            // toggle the status
+            toggleWrite();
+
+            // 我现在觉得这样解释不会迷惑：write指示现在node的状态，如果是on，即true，那么button应该提供关闭功能，即close。
+            updateQuickNoteButtonState();
+
             if (write) {
-                button.setText("Write!");
-                QuickNote.closePanel();
-            } else {
-                button.setText("close.");
                 QuickNote.getQuickNote();
+            } else {
+                QuickNote.closePanel();
             }
-            write = !write;
         });
 
         return button;

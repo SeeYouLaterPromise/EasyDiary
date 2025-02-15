@@ -17,8 +17,12 @@ public class StringClip {
         records = new String[50];
     }
 
-    public void excerpt() {
+    public static void playBeep() {
         toolkit.beep();
+    }
+
+    public void excerpt() {
+        playBeep();
 
         // excerpt函数线程貌似快于系统复制功能函数，所有我们需要小等一下。
         // Add a small delay to allow the system to copy the selected text to the clipboard

@@ -30,6 +30,8 @@ public class QuickNote {
     public static Stage getQuickNote() {
         if (quickNote == null) {
             quickNote = new QuickNote();
+            LearningMode.toggleWrite();
+            LearningMode.updateQuickNoteButtonState();
         } else {
             System.out.println("You already have one!");
         }
@@ -50,6 +52,7 @@ public class QuickNote {
 
     public static void closePanel() {
         if (noteStage != null) noteStage.hide();
+        LearningMode.toggleWrite();
         LearningMode.updateQuickNoteButtonState();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
         quickNote = null;

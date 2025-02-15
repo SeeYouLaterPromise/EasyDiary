@@ -48,6 +48,8 @@ ATTENTION!!! If you post request via HTTP, you should do encoding with `UTF-8` f
 
 ## Let AI help you organize what you learn today.
 TODO:
+1. First stage: text, users' excerpts and thoughts.
+2. Second stage: image users uploaded. such as some do-wrong question.
 
 ## Question learning method
 When you input one or several paragraph (which can be called `knowledge`), we will let AI generate some questions based that `knowledge`.

@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // Singleton
-public class QuickNoteApp {
+public class DeprecatedQuickNoteApp {
     // 变量来存储拖动过程中的鼠标位置
     private static int xMouse, yMouse;
     // indicates the status of the panel (fix or not)
@@ -18,18 +18,18 @@ public class QuickNoteApp {
     private static boolean submitted = false;
 
     // 单例模式的核心：私有化构造器，避免外部创建多个实例。
-    private QuickNoteApp() { showQuickNotePanel(); }
+    private DeprecatedQuickNoteApp() { showQuickNotePanel(); }
 
     // 饿汉式单例（Eager Singleton）类加载时就实例化
 //    private static final QuickNoteApp panel = new QuickNoteApp();
 
     // 懒汉式单例（Lazy Singleton）按需加载 without keyword of final.
-    private static QuickNoteApp panel = null;
+    private static DeprecatedQuickNoteApp panel = null;
 
     // 供外界调用这一唯一的panel.
     public static void getPanel() {
         if (panel == null) {
-            panel = new QuickNoteApp();
+            panel = new DeprecatedQuickNoteApp();
         }
     }
 
@@ -117,6 +117,7 @@ public class QuickNoteApp {
 
     public static void Submit() {
         String text = textArea.getText();
+        System.out.println(text);
 //        String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
         String entry = "[Thought]:\n" + text;
         txtFileManager.WriteToFile(entry);
