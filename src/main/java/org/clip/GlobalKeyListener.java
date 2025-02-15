@@ -90,6 +90,7 @@ public class GlobalKeyListener implements NativeKeyListener {
         try {
             System.out.println("Exit the Listening mode.");
             GlobalScreen.unregisterNativeHook();
+            LearningMode.updateListenerButtonState();
         } catch (NativeHookException nativeHookException) {
             System.err.println(nativeHookException.getMessage());
         }

@@ -1,20 +1,28 @@
 package org.clip;
 
+import Jampack.H;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,21 +33,37 @@ public class MainPanel extends Application {
     private LocalDate currentDate = LocalDate.now();
     private int year = currentDate.getYear();
 
+    // TODO: used for display your plan today
     private TableView<String> tableView;
 
     // get the size of device screen
-    private Toolkit toolkit = Toolkit.getDefaultToolkit();
-    private Dimension screenSize = toolkit.getScreenSize();
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private double Height = screenSize.getHeight() / 2 + 120;
+    private double Width = screenSize.getWidth() / 2 + 220;
 
     // 主线程只用来管理UI，多线程来管理其他功能调用。
     private ExecutorService executorService;
 
+    // learning mode function
     private static boolean ModeOn = false;
-    private static Button ModeOnButton = new Button("Start up learning mode!");
+    private static Button LearningModeOnButton = new Button("Start up learning mode!");
 
+    private static Stage stage = null;
+
+    /**
+     * for learning mode shutdown, update the status in the main panel to remind user.
+     */
     public static void updateState() {
         ModeOn = false;
-        ModeOnButton.setText("Start up learning mode!");
+        LearningModeOnButton.setText("Start up learning mode!");
+    }
+
+    public static void showMainPanel() {
+        stage.show();
+    }
+
+    public static void hideMainPanel() {
+        stage.hide();
     }
 
     public static void main(String[] args) {
@@ -52,10 +76,23 @@ public class MainPanel extends Application {
         executorService.shutdown();
     }
 
+    private void closePanel () {
+        LearningMode.closePanel();
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        stage = primaryStage;
+
         // 创建一个固定大小的线程池
         executorService = Executors.newFixedThreadPool(3);
+
+        primaryStage.setOnCloseRequest((WindowEvent we) -> {
+            System.out.println("Hide Learning mode GUI.");
+//            we.consume(); // Prevent the default behavior (window closing)
+            closePanel();
+            System.exit(0);
+        });
 
         // 设置根布局
         VBox root = new VBox(10);
@@ -63,9 +100,12 @@ public class MainPanel extends Application {
 
         // 创建年份标题
         Label yearLabel = new Label(userName + "'s " + currentDate.getYear());
+        yearLabel.setId("year-title");
 
-        // TODO: how to make it locate center?
-        yearLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        // 将年份标签放入一个HBox中，并设置HBox的对齐方式
+        HBox yearHBox = new HBox(yearLabel);
+        yearHBox.setAlignment(Pos.CENTER);  // 设置HBox的内容居中
+        yearHBox.setPadding(new Insets(10));  // 可选：给HBox添加一些内边距，使其不至于紧贴边缘
 
         // 创建日期按钮（1-31）
         GridPane calendarGrid = createCalendarGrid();
@@ -76,91 +116,69 @@ public class MainPanel extends Application {
         eventColumn.setCellValueFactory(data -> Bindings.createObjectBinding(() -> data.getValue()));
         tableView.getColumns().add(eventColumn);
         tableView.setPrefHeight(150);
+        tableView.setOpacity(0);
 
-//         日期按钮点击事件
+        // 表格内容刷新时加入过渡效果
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), tableView);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+
+//         日历标签点击事件绑定
         for (int i = 1; i <= 12; i++) {
             for (int j = 1; j <= 31; j++) {
-                Label label = (Label) calendarGrid.lookup("#" + i + "_" + j);
+                Label label = (Label) calendarGrid.lookup("#" + "Label-Day-" +  i + "_" + j);
                 // #i_j 确实可以索引到一个Label组件，然后进行event binding.
                 if (label != null) {
                     // 先根据id算出月日，然后对比今天是`之前`还是`之后`。
                     LocalDate TargetDate = LocalDate.of(year, i, j);
-                    if (TargetDate.isBefore(currentDate)) {
-//                        label.setStyle("-fx-background-color: #fde75d;");
-                    } else if (TargetDate.isEqual(currentDate)) {
-//                        label.setStyle("-fx-background-color: #48f12e;");
-                    } else {
-//                        label.setStyle("-fx-background-color: #ff0b0b;");
-                    }
+
                     int finalI = i; // 需要做一下 final 处理
                     int finalJ = j;
                     label.setOnMouseClicked(event -> {
                         tableView.getItems().clear();
                         tableView.getItems().add("Event for day (" + finalI + ", " + finalJ + ")"); // 模拟事件数据
-                        openNewWindow(TargetDate);
+                        getConcreteDayPanel(TargetDate);
+                        hideMainPanel();
                     });
                 }
             }
         }
 
-        // TODO: Learning start and stop management.
-
-        ModeOnButton.setOnAction(event -> {
+        // Learning start and stop management.
+        LearningModeOnButton.setOnAction(event -> {
             if (ModeOn) {
-                ModeOnButton.setText("Start up learning mode!");
+                LearningModeOnButton.setText("Start up learning mode!");
                 LearningMode.closePanel();
             } else {
                 // remind user the status.
-                ModeOnButton.setText("Shut down learning mode.");
+                LearningModeOnButton.setText("Shut down learning mode.");
                 Stage LmStage = LearningMode.getLmPanel();
             }
             ModeOn = !ModeOn;
         });
 
         // 将元素添加到根布局
-        root.getChildren().addAll(yearLabel, calendarGrid, tableView, ModeOnButton);
+        root.getChildren().addAll(yearHBox, calendarGrid, tableView, LearningModeOnButton);
 
         // 创建并设置场景
-        Scene scene = new Scene(root, 1200, 800);
-        primaryStage.setWidth((double) screenSize.width / 2);  // 设置子窗口的宽度
-        primaryStage.setHeight((double) screenSize.height / 2); // 设置子窗口的高度
+        Scene scene = new Scene(root, Width, Height);
+
+        // 添加CSS sheet
+//        System.out.println(getClass().getResource("/styles.css"));
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+
+        primaryStage.setWidth(Width);  // 设置子窗口的宽度
+        primaryStage.setHeight(Height); // 设置子窗口的高度
         primaryStage.setTitle("Easy Diary");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     // 创建子窗口的方法
-    private void openNewWindow(LocalDate date) {
-        // 创建子窗口
-        Stage newStage = new Stage();
-        newStage.setTitle("Child Window");
-
-        // 设置子窗口的大小
-        newStage.setWidth((double) screenSize.width / 2);  // 设置子窗口的宽度
-        newStage.setHeight((double) screenSize.height / 2); // 设置子窗口的高度
-
-
-        // 在子窗口中添加内容
-        Label message = new Label("This is a new window.");
-        StackPane secondaryLayout = new StackPane();
-        secondaryLayout.getChildren().add(message);
-
-        // 创建 TextArea 来显示文件内容
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);  // 禁止编辑
-        textArea.setWrapText(true);   // 自动换行
-
-        // 读取并显示文件内容
-        TxtFileManager txtFileManage = new TxtFileManager(date);
-        String fileContent = txtFileManage.readFileContent();  // 文件路径
-        textArea.setText(fileContent);
-
-        secondaryLayout.getChildren().add(textArea);
-
-        // 创建子窗口的场景并显示
-        Scene newScene = new Scene(secondaryLayout, 300, 200);
-        newStage.setScene(newScene);
-        newStage.show();
+    private void getConcreteDayPanel(LocalDate date) {
+        CertainDay.getCertainDayPanel(date);
     }
 
     // 创建指定年份的日历视图
@@ -171,6 +189,7 @@ public class MainPanel extends Application {
 
         // 显示年份
         Label yearLabel = new Label(String.valueOf(this.year));
+
         gridPane.add(yearLabel, 0, 0, 1, 1); // 标题在第一行占据31列
 
         // TODO:    col
@@ -181,18 +200,20 @@ public class MainPanel extends Application {
         // 处理第一行
         for (int j = 1; j <= 31; j++) {
             Label label = new Label(String.valueOf(j));
+            label.setId("Label-" + j);
             gridPane.add(label, j,0);
         }
 
 
         for (int i = 1; i <= 12; i++) {
             Label monLabel = new Label(Month.values()[i-1].toString().substring(0, 3));
+            monLabel.setId("Label-Mon-" + i);
             gridPane.add(monLabel, 0, i);
             int LengthOfMonth = LocalDate.of(this.year, i, 1).lengthOfMonth();
             // 根据每个月具体多少天来动态绑定
             for (int j = 1; j <= LengthOfMonth; j++) {
                 Label label = new Label("0");
-                label.setId(i + "_" + j);
+                label.setId("Label-Day-" + i + "_" + j);
                 gridPane.add(label, j, i);
             }
         }

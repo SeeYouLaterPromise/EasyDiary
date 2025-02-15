@@ -1,6 +1,10 @@
 package org.clip;
 
+import com.sun.istack.internal.Nullable;
+import org.demo.FileReaderExample;
+
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -14,7 +18,7 @@ public class TxtFileManager {
     }
 
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
-    private void DateToPath(LocalDate date) {
+    private void DateToPath(LocalDate date, String type) {
         System.out.println("Here is TxtFileManager Class, you new an Instance: " + date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
         int year = date.getYear();
         int month = date.getMonthValue();
@@ -24,7 +28,7 @@ public class TxtFileManager {
 //        System.out.println("Day: " + day);
         // create the aimed directory hierarchy
         StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/';
-        tempPath = paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
+        tempPath = type + '_' + paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
         filePath = StoreDir + tempPath;
     }
 
@@ -66,12 +70,12 @@ public class TxtFileManager {
         ensure();
     }
     public TxtFileManager() {
-        DateToPath(LocalDate.now());
+        DateToPath(LocalDate.now(), "Content");
         ensure();
     }
 
-    TxtFileManager (LocalDate date) {
-        DateToPath(date);
+    TxtFileManager (LocalDate date, String type) {
+        DateToPath(date, type);
         ensure();
     }
 
@@ -132,6 +136,22 @@ public class TxtFileManager {
         return content.toString();  // 返回读取的文本内容
     }
 
+    @Nullable
+    public static String getString(String path) {
+        InputStream inputStream = FileReaderExample.class.getResourceAsStream(path);
+        String firstLine = null;
+        if (inputStream != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                firstLine = reader.readLine();  // 读取第一行
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            firstLine = "File not found in resources!";
+        }
+        return firstLine;
+    }
+
     public void setStoreDir(String Dir) {
         StoreDir = Dir;
         filePath = StoreDir + tempPath;
@@ -148,10 +168,5 @@ public class TxtFileManager {
     public void setTempPath(String tempPath) {
         tempPath = tempPath;
         filePath = StoreDir + tempPath;
-    }
-
-    public static void main(String[] args) {
-        new TxtFileManager().DateToPath(LocalDate.now());
-//        String[] lines = new TxtFileManager("nihao.txt").ReadFromFile();
     }
 }

@@ -27,11 +27,13 @@ public class LearningMode{
 
     private static Button listenedButton = null;
 
+    /**
+     * to accept the state of sub-layout.
+     */
     public static void updateQuickNoteButtonState() {
         if (write) {
             write = false;
             quickNoteButton.setText("Write!");
-            QuickNote.closePanel();
         }
     }
 
@@ -39,7 +41,6 @@ public class LearningMode{
         if (listened) {
             listened = false;
             listenedButton.setText("Listen!");
-            GlobalKeyListener.shutDownMode();
         }
 
     }
@@ -55,13 +56,13 @@ public class LearningMode{
         return LmPanel;
     }
 
-    // TODO: 将这些子窗口抽象成一个父类，让这里的closePanel只用写一遍
+    // TODO: 将这些子窗口抽象成一个父类，让这里的closePanel...
     public static void closePanel() {
         MainPanel.updateState();
-        LmPanel.hide();
+        if (LmPanel != null) LmPanel.hide();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
-        updateQuickNoteButtonState();
-        updateListenerButtonState();
+        if (write) QuickNote.closePanel();
+        if (listened) GlobalKeyListener.shutDownMode();
         learningMode = null;
     }
 

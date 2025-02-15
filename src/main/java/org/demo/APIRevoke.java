@@ -22,21 +22,7 @@ public class APIRevoke {
 
     private String getApiKey() {
         // 获取 resources 文件夹下的 txt 文件
-        InputStream inputStream = FileReaderExample.class.getResourceAsStream("/api_key.txt");
-        String firstLine = null;
-        if (inputStream != null) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                firstLine = reader.readLine();  // 读取第一行
-                if (firstLine != null) {
-//                    System.out.println(firstLine);  // 输出第一行
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("File not found in resources!");
-        }
-        return firstLine;
+        return TxtFileManager.getString("/api_key.txt");
     }
 
     private static String StringToJSon(String responseString) {

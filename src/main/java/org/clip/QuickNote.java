@@ -49,7 +49,8 @@ public class QuickNote {
     }
 
     public static void closePanel() {
-        noteStage.hide();
+        if (noteStage != null) noteStage.hide();
+        LearningMode.updateQuickNoteButtonState();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
         quickNote = null;
     }
@@ -63,10 +64,7 @@ public class QuickNote {
             System.out.println("Hide Quick Note GUI.");
 //            System.exit(0);
             we.consume(); // Prevent the default behavior (window closing)
-            stage.hide();
-            LearningMode.updateQuickNoteButtonState();
-            // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
-            quickNote = null;
+            closePanel();
         });
 
         stage.setAlwaysOnTop(true);

@@ -1,0 +1,76 @@
+/* 为 ScrollPane 设置外观 */
+.scroll-pane {
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+/* 修改滚动条的样式 */
+.scroll-pane .scroll-bar {
+    -fx-background-color: #f1f1f1;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: #5e9ed6;
+}
+
+/* 页面背景颜色 */
+.root {
+    -fx-background-color: #f4f4f9;
+    -fx-padding: 20px;
+}
+
+/* 主标题样式 */
+.label-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+}
+
+/* 子标题 Label 样式 */
+.label-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #555555;
+    -fx-padding: 5px;
+}
+
+#Remark {
+    -fx-font-weight: bold;
+}
+
+/* TextArea 样式 */
+.text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-pref-height: 100px;
+    -fx-font-size: 20px;
+    -fx-focus-color: #5e9ed6;
+}
+
+/* 设置两个 TextArea 之间的间距 */
+.vbox {
+    -fx-spacing: 15px;
+    -fx-padding: 10px;
+}
+
+/* 为按钮添加样式（如果需要的话） */
+.button {
+    -fx-background-color: #5e9ed6;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #4a8db1;
+}
