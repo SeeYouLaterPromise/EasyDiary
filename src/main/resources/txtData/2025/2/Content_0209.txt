@@ -1,0 +1,5 @@
+[Excerpt]:
+COMMON ERROR: The name of the kv file, e.g. pong.kv, must match the name of the app, e.g. PongApp (the part before the App ending).
+[Thought]:
+class PongGame(Widget):
+    self.height 这个变量虽然没有在我们的代码中体现，但是Widget这个父类里面应该是存在的。

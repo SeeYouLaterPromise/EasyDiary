@@ -22,7 +22,7 @@ public class APIRevoke {
 
     private String getApiKey() {
         // 获取 resources 文件夹下的 txt 文件
-        return TxtFileManager.getString("/api_key.txt");
+        return TxtFileManager.getFirstLine("/api_key.txt");
     }
 
     private static String StringToJSon(String responseString) {

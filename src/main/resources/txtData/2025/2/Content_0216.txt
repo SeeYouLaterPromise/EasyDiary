@@ -1,0 +1,40 @@
+[Excerpt]:
+shutDownMode是注销并清理监听器，还要关闭线程池可能花费的时间较长一些，所以短时间内立刻调用startUpMode会出现失效的问题，对吧？那么有没有折中的方案，我不想使用监听器了，可不可以先暂时关闭监听器功能，而非全部注销乃至关闭线程池？
+ChatGPT 说：
+你完全理解了问题的根本：shutDownMode 会注销监听器并关闭线程池，而这一过程需要一些时间。如果你希望避免完全注销和关闭线程池，可以使用一种 暂时禁用监听器 的方法，而不是完全注销监听器，这样可以在需要时恢复监听功能，而无需重新注册和启动线程池。
+[Excerpt]:
+            // 添加全局键盘监听器
+
+[Excerpt]:
+public static void startUpMode() {
+        try {
+            // Check if the thread is on or not.
+            if (!GlobalScreen.isNativeHookRegistered()) {
+                // 这一步是开启JNativeHook线程
+                System.out.println("Set up the JNativeHook Thread.");
+                GlobalScreen.registerNativeHook();
+            }
+
+            // 添加全局键盘监听器
+            System.out.println();
+            globalKeyListener = new GlobalKeyListener();
+            GlobalScreen.addNativeKeyListener(globalKeyListener);
+        } catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+            System.exit(1);
+        }
+    }
+[Excerpt]:
+Transformer 是 Google 的团队在 2017 年提出的一种 NLP 经典模型，现在比较火热的 Bert 也是基于 Transformer。Transformer 模型使用了 Self-Attention 机制，不采用RNN顺序结构，使得模型可以并行化训练，而且能够拥有全局信息。本文将对Vision Transformer的原理和代码进行非常全面的解读。考虑到每篇文章字数的限制，每一篇文章将按照目录的编排包含三个小节，而且这个系列会随着Vision Transformer的发展而长期更新。
+[Excerpt]:
+if (GlobalScreen.isNativeHookRegistered()) {
+            System.out.println("Remove the listener.");
+            GlobalScreen.removeNativeKeyListener(globalKeyListener);
+            // 更新LearningMode浮窗上面的状态
+            // 如果使用快捷键调用shutDownMode()的话，会错误使用JNativeHook线程来对GUI操作，引起异常
+            Platform.runLater(() -> {
+                LearningMode.toggleListened();
+                LearningMode.updateListenerButtonState();
+            });
+        }

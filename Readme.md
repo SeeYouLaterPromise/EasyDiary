@@ -9,7 +9,7 @@ Aimed for help you `look back on yourself`.
 ## Main page (display data)
 ![codeStats.png](src/main/resources/image/codeStats.png)
 
-That is inspired by this web application: https://codestats.net! We encourage programmers can use it!
+That is inspired by this web application: https://codestats.net! We encourage programmers to use it!
 
 运行程序入口：`MainPanel`
 
@@ -19,8 +19,11 @@ That is inspired by this web application: https://codestats.net! We encourage pr
 > A Calendar to track the whole year usage of "learning mode" of user.
 - 系统获取当前年月日信息，当用户点击年历里面的项时判断：
   - 如果是过去（昨天以及之前）：调出一个panel来回顾那些使用learning mode产生的数据。
+    - ![pastPanel.png](src/main/resources/image/pastPanel.png)
   - 如果是现在（今天）：调出一个panel来观察今天使用learning mode产生的数据。
+    - ![currentPanel.png](src/main/resources/image/currentPanel.png)
   - 如果是未来（明天以及之后）：调出一个panel让用户在这个panel里面可以写下对那一天的计划规划。
+    - ![futurePanel.png](src/main/resources/image/futurePanel.png)
 
 
 
@@ -58,6 +61,7 @@ Later on, when I have some collaboration friends, let us add `database` somethin
 2. Second stage: image users uploaded. such as some do-wrong question.
 
 ## Question learning method
+![QALearn.png](src/main/resources/image/QALearn.png)
 When you input one or several paragraph (which can be called `knowledge`), we will let AI generate some questions based that `knowledge`.
 
 In this way, you can answer these questions to enhance your understanding.  

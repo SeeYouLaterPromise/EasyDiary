@@ -6,12 +6,25 @@ import org.demo.FileReaderExample;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Locale;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TxtFileManager {
     private String StoreDir = "src/main/resources/";
     private String tempPath = "temp.txt";
     private String filePath;
+
+    // 自动根据时区获取时分秒
+    public static String getCurrentTimeString() {
+        // 获取当前的日期时间和时区
+        ZonedDateTime now = ZonedDateTime.now();
+
+        // 自定义格式：例如 "yyyy-MM-dd HH:mm:ss Z"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
+
+        // 格式化 ZonedDateTime
+        return now.format(formatter);
+    }
 
     private String paddingZeroAhead(int num) {
         return num >= 10 ? String.valueOf(num) : "0" + num;
@@ -133,7 +146,7 @@ public class TxtFileManager {
     }
 
     @Nullable
-    public static String getString(String path) {
+    public static String getFirstLine(String path) {
         InputStream inputStream = FileReaderExample.class.getResourceAsStream(path);
         String firstLine = null;
         if (inputStream != null) {

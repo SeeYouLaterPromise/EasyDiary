@@ -79,7 +79,7 @@ public class DeepSeek {
         HttpPost request = new HttpPost(BASE_URL);
 
         // 设置请求头，包括 API 密钥
-        String API_KEY = TxtFileManager.getString("/api_key.txt");
+        String API_KEY = TxtFileManager.getFirstLine("/api_key.txt");
         request.setHeader("Authorization", "Bearer " + API_KEY);
         request.setHeader("Content-Type", "application/json");
 
