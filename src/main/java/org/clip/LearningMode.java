@@ -156,14 +156,11 @@ public class LearningMode{
         Button button = new Button("Listen off.");
 
         button.setOnAction(e -> {
-            toggleListened();
-
-            updateListenerButtonState();
 
             if (listened) {
-                GlobalKeyListener.startUpMode();
-            } else {
                 GlobalKeyListener.shutDownMode();
+            } else {
+                GlobalKeyListener.startUpMode();
             }
         });
 
@@ -174,16 +171,11 @@ public class LearningMode{
         Button button = new Button("Panel off.");
 
         button.setOnAction(e -> {
-            // toggle the status
-            toggleWrite();
-
             // 我现在觉得这样解释不会迷惑：write指示现在node的状态，如果是on，即true，那么button应该提供关闭功能，即close。
-            updateQuickNoteButtonState();
-
             if (write) {
-                QuickNote.getQuickNote();
-            } else {
                 QuickNote.closePanel();
+            } else {
+                QuickNote.getQuickNote();
             }
         });
 

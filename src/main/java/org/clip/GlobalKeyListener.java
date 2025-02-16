@@ -5,6 +5,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import javafx.application.Platform;
 
+
 /**
  * 快捷键 全局监听 方便用户释放鼠标，使用键盘快速调用
  */
@@ -15,11 +16,10 @@ public class GlobalKeyListener implements NativeKeyListener {
     // TODO: Could you find more efficient way to do combination?
 
     private boolean QuickPanelOn = false;
+
+    private static GlobalKeyListener globalKeyListener = null;
     @Override
     public void nativeKeyPressed(NativeKeyEvent e) {
-//        System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-//        System.out.println(e.getKeyCode());
-//        System.out.println("CTRL: " + CTRL);
         int key = e.getKeyCode();
 
         switch (key) {
@@ -75,50 +75,46 @@ public class GlobalKeyListener implements NativeKeyListener {
         }
     }
 
-    public void nativeKeyReleased(NativeKeyEvent e) {
-//        System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-    }
+    public void nativeKeyReleased(NativeKeyEvent e) {}
 
-    public void nativeKeyTyped(NativeKeyEvent e) {
-//        System.out.println("Key Typed: " + e.getKeyText(e.getKeyCode()));
-//        System.out.println("Key Typed: " + e.paramString());
-    }
+    public void nativeKeyTyped(NativeKeyEvent e) {}
 
     public static void startUpMode() {
-        System.out.println("Enter Listening Mode!");
         try {
-            GlobalScreen.registerNativeHook();
-        }
-        catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
+            // Check if the thread is on or not.
+            if (!GlobalScreen.isNativeHookRegistered()) {
+                // 这一步是开启JNativeHook线程
+                System.out.println("Set up the JNativeHook Thread.");
+                GlobalScreen.registerNativeHook();
+            }
 
-            System.exit(1);
-        }
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
-    }
+            // 添加全局键盘监听器
+            System.out.println("Add listener!");
+            globalKeyListener = new GlobalKeyListener();
+            GlobalScreen.addNativeKeyListener(globalKeyListener);
 
-    // FIXME: IF you shutdown immediately after startUp, there is something would be caught, which means that register have not been finished.
-    public static void shutDownMode() {
-        try {
-            System.out.println("Exit the Listening mode.");
-            GlobalScreen.unregisterNativeHook();
+            // 更新LearningMode浮窗上面的状态
+            LearningMode.toggleListened();
             LearningMode.updateListenerButtonState();
-        } catch (NativeHookException nativeHookException) {
-            System.err.println(nativeHookException.getMessage());
+        } catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+            System.exit(1);
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            GlobalScreen.registerNativeHook();
-        }
-        catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
 
-            System.exit(1);
+    public static void shutDownMode() {
+        if (GlobalScreen.isNativeHookRegistered()) {
+            System.out.println("Remove the listener.");
+            GlobalScreen.removeNativeKeyListener(globalKeyListener);
+            // 更新LearningMode浮窗上面的状态
+            // 如果使用快捷键调用shutDownMode()的话，会错误使用JNativeHook线程来对GUI操作，引起异常
+            Platform.runLater(() -> {
+                LearningMode.toggleListened();
+                LearningMode.updateListenerButtonState();
+            });
         }
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+
     }
 }

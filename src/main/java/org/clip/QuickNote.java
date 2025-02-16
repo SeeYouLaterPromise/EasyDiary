@@ -33,7 +33,7 @@ public class QuickNote {
             LearningMode.toggleWrite();
             LearningMode.updateQuickNoteButtonState();
         } else {
-            System.out.println("You already have one!");
+//            System.out.println("You already have one!");
         }
         return noteStage;
     }

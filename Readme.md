@@ -8,8 +8,13 @@ Aimed for help you `look back on yourself`.
 
 ## Main page (display data)
 ![img.png](src/main/resources/image/img.png)
+
 That is inspired by this web application: https://codestats.net! We encourage programmers can use it!
+
+运行程序入口：`MainPanel`
+
 - 制作一个如图所示的年历来展示用户这一整年的使用laptop的学习情况
+`insert a picture`
 > A Calendar to track the whole year usage of "learning mode" of user.
 - 系统获取当前年月日信息，当用户点击年历里面的项时判断：
   - 如果是过去（昨天以及之前）：调出一个panel来回顾那些使用learning mode产生的数据。
