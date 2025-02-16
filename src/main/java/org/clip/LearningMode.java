@@ -75,6 +75,7 @@ public class LearningMode{
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
         if (write) QuickNote.closePanel();
         if (listened) GlobalKeyListener.shutDownMode();
+        MainPanel.showMainPanel();
         learningMode = null;
     }
 

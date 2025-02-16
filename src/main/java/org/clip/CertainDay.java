@@ -49,6 +49,11 @@ public class CertainDay {
         return txtFileManage.readFileContent();
     }
 
+    private void reserveContent(String type, String content) {
+        TxtFileManager txtFileManager = new TxtFileManager(date, type);
+        txtFileManager.WriteToFile(content, false);
+    }
+
     private void closePanel() {
         cerainDayStage.hide();
         certainDay = null;
@@ -68,7 +73,7 @@ public class CertainDay {
         String title = date.getDayOfMonth() + "-th, " + date.getMonth();
         stage.setTitle(title);
         stage.setOnCloseRequest((WindowEvent we) -> {
-            System.out.println("Hide Learning mode GUI.");
+            System.out.println("Hide Certain Day GUI.");
 //            System.exit(0);
             we.consume(); // Prevent the default behavior (window closing)
             closePanel();
@@ -262,8 +267,15 @@ public class CertainDay {
         textArea.setMaxHeight(height);  // 强制设置最大高度
         textArea.setMinHeight(height);  // 强制设置最小高度
         textArea.setPrefWidth(width);
+        if (editable) {
+            textArea.setOnKeyReleased(event -> {
+//                System.out.println(type + ' ' + date.toString());
+                // 先写一个实时保存的功能，因为Ctrl+S保存的方案很多人不习惯。
+                // 先采用全覆盖重写的方案，简单实现一下。
+                reserveContent(type, textArea.getText());
+            });
+        }
         return textArea;
     }
-
 
 }

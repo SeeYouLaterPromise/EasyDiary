@@ -146,6 +146,7 @@ public class MainPanel extends Application {
                 // remind user the status.
                 LearningModeOnButton.setText("Shut down learning mode.");
                 Stage LmStage = LearningMode.getLmPanel();
+                hideMainPanel();
             }
             ModeOn = !ModeOn;
         });

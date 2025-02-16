@@ -5,6 +5,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class StringClip {
     private static String[] records;
@@ -44,7 +45,7 @@ public class StringClip {
             String entry = "[Excerpt]:\n" + text;
             TxtFileManager txtFileManager = new TxtFileManager();
 
-            txtFileManager.WriteToFile(entry);
+            txtFileManager.WriteToFile(entry, true);
 
             records[size++] = text;
 

@@ -23,3 +23,4 @@ UI应该放在主线程，且主线程应该用来处理UI等简单的逻辑；�
 [Excerpt]:
 另外线程方面，执行main()方法时是主线程，当调用init()方法时是JavaFX-Launcher线程，当调用start()方法时是JavaFX Application Thread线程，当调用stop()方法时依然是JavaFX Application Thread线程。
 因此，我们可以在init()方法中做一些连接数据库等初始化工作，可与start()方法的不同线程同步进行，提高运行效率。
+

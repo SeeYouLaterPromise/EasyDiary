@@ -43,7 +43,7 @@ public class QuickNote {
         String text = textArea.getText();
         String entry = "[Thought]:\n" + text;
         TxtFileManager txtFileManager = new TxtFileManager();
-        txtFileManager.WriteToFile(entry);
+        txtFileManager.WriteToFile(entry, true);
 
         // Optionally, you can add a Date to the entry before writing
         // Add Date to mark the submission

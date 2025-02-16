@@ -7,14 +7,15 @@
 Aimed for help you `look back on yourself`.
 
 ## Main page (display data)
-![img.png](src/main/resources/image/img.png)
+![codeStats.png](src/main/resources/image/codeStats.png)
 
 That is inspired by this web application: https://codestats.net! We encourage programmers can use it!
 
 运行程序入口：`MainPanel`
 
 - 制作一个如图所示的年历来展示用户这一整年的使用laptop的学习情况
-`insert a picture`
+![EasyDiary.png](src/main/resources/image/EasyDiary.png)
+面板中的年份和每个月的天数都是`LocateDate`中获取的，确保对于年年有效且闰年二月天数的问题也得到解决。
 > A Calendar to track the whole year usage of "learning mode" of user.
 - 系统获取当前年月日信息，当用户点击年历里面的项时判断：
   - 如果是过去（昨天以及之前）：调出一个panel来回顾那些使用learning mode产生的数据。
@@ -24,7 +25,7 @@ That is inspired by this web application: https://codestats.net! We encourage pr
 
 
 ### JavaFX for GUI dev
-![img.png](src/main/resources/image/javaFX.png)
+![javaFX.png](src/main/resources/image/javaFX.png)
 
 ## Learning mode (collect data)
 用户在开启`learning mode`之前先让他输入一个`关键词`来确定他在做什么工作，便于后续数据管理。
@@ -39,20 +40,20 @@ That is inspired by this web application: https://codestats.net! We encourage pr
 
 version 0 for `.txt` file storage, I just focus on the core logic development.
 
-Later on, when I have some collaboration friends, let us add `database` something else!
 `year_month_day` hierarchy:
 - `year` and `month` are both directory.
 - `day` is the data file.
 
+Later on, when I have some collaboration friends, let us add `database` something else!
+
+
 
 ## LLM API
 你需要在resource文件下新建一个`api_key.txt`文件来存储你的deepseek的api启用LLM的调用。
-How to revoke the api of deepseek or openai.
 
-ATTENTION!!! If you post request via HTTP, you should do encoding with `UTF-8` for chinese words.
+> ATTENTION!!! If you post request via HTTP, you should do encoding with `UTF-8` for chinese words.
 
 ## Let AI help you organize what you learn today.
-TODO:
 1. First stage: text, users' excerpts and thoughts.
 2. Second stage: image users uploaded. such as some do-wrong question.
 

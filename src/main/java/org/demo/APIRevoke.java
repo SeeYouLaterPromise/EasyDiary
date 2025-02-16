@@ -107,7 +107,7 @@ public class APIRevoke {
                 System.out.println("Generated text: \n" + generatedText);
 
                 TxtFileManager txtFileManager = new TxtFileManager("novel.txt");
-                txtFileManager.WriteToFile(generatedText);
+                txtFileManager.WriteToFile(generatedText, true);
 
             }
 

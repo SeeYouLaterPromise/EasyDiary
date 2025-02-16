@@ -19,14 +19,10 @@ public class TxtFileManager {
 
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
     private void DateToPath(LocalDate date, String type) {
-        System.out.println("Here is TxtFileManager Class, you new an Instance: " + date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
+//        System.out.println("Here is TxtFileManager Class, you new an Instance: " + date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
         int year = date.getYear();
         int month = date.getMonthValue();
         int day = date.getDayOfMonth();
-//        System.out.println("Year: " + year);
-//        System.out.println("Month: " + month);
-//        System.out.println("Day: " + day);
-        // create the aimed directory hierarchy
         StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/';
         tempPath = type + '_' + paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
         filePath = StoreDir + tempPath;
@@ -79,21 +75,21 @@ public class TxtFileManager {
         ensure();
     }
 
-    public void WriteToFile (String entry) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+    public void WriteToFile (String entry, boolean append) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, append))) {
             writer.write(entry);
             writer.newLine();
-            System.out.println("Entry written to file successfully.");
+//            System.out.println("Entry written to file successfully.");
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    public void WriteToFile (String[] records) {
+    public void WriteToFile (String[] records, boolean append) {
         // 使用 BufferedWriter 写入文本到文件
         // 覆盖模式：new FileWriter(filePath) 默认会覆盖文件内容。
         // 追加模式：new FileWriter(filePath, true) 通过传递 true 启用追加模式，写入的新内容将追加到文件的末尾。
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, append))) {
             for (String entry : records) {
                 writer.write(entry); // 写入内容
                 writer.newLine(); // 添加换行

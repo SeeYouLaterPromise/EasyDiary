@@ -120,7 +120,7 @@ public class DeprecatedQuickNoteApp {
         System.out.println(text);
 //        String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
         String entry = "[Thought]:\n" + text;
-        txtFileManager.WriteToFile(entry);
+        txtFileManager.WriteToFile(entry, true);
         // TODO: add Date to mark it.
         // after submitting and then undergo lost and gained, clear the textarea.
         submitted = true;
