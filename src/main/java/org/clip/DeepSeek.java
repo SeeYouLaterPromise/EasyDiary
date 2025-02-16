@@ -1,18 +1,18 @@
 package org.clip;
 
-import com.sun.istack.internal.Nullable;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.demo.FileReaderExample;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 public class DeepSeek {
     // TODO: 当点击过去的某一天是，绑定在Remark标签上吧：开启子线程调用;
@@ -21,6 +21,7 @@ public class DeepSeek {
     private static final String TEST_SYSTEM = "You are a helpful assistant.";
     private static final String KNOWLEDGE_SYSTEM = "你是一位学习助手，请你帮助我总结知识点并给予知识拓展学习" +
             "我会以[Content]:为开头来上传学习内容，请你帮助我总结我上传的内容，如果知识可以进一步拓展，你可以进行补充。最后，设计3个问题来检验我的掌握情况。" +
+            "请注意：是你出问题，我来回答。请在给出归纳内容、拓展知识内容以及设计的问题后，请等待我的答案回复。" +
             "我会以[Answer]:作为开头回答你的问题，请你进一步就我的答案评估我的掌握情况，并给出一些提升建议。";
     private static final String modelType = "chat";
 

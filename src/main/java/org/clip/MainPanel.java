@@ -34,8 +34,8 @@ public class MainPanel extends Application {
 
     // get the size of device screen
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private double Height = screenSize.getHeight() / 2 + 120;
-    private double Width = screenSize.getWidth() / 2 + 220;
+    private double Height = screenSize.getHeight() / 2 + 200;
+    private double Width = screenSize.getWidth() / 2 + 400;
 
     // 主线程只用来管理UI，多线程来管理其他功能调用。
     private ExecutorService executorService;
