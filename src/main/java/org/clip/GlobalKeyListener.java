@@ -4,6 +4,7 @@ import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 
 
 /**
@@ -18,9 +19,12 @@ public class GlobalKeyListener implements NativeKeyListener {
     private boolean QuickPanelOn = false;
 
     private static GlobalKeyListener globalKeyListener = null;
+
+    private Stage QuickNoteStage = null;
     @Override
     public void nativeKeyPressed(NativeKeyEvent e) {
         int key = e.getKeyCode();
+//        System.out.println(e.getKeyChar() + " : " + key);
 
         switch (key) {
             case NativeKeyEvent.VC_CONTROL:
@@ -30,7 +34,6 @@ public class GlobalKeyListener implements NativeKeyListener {
             case NativeKeyEvent.VC_C:
                 // CTRL equals to one, indicating that last pressing is CTRL.
                 if (CTRL) {
-                    CTRL = false;
                     System.out.println("Excerpt");
                     // DoneTODO: Excerpt function to extract String from clipboard.
                     stringClip.excerpt();
@@ -38,20 +41,20 @@ public class GlobalKeyListener implements NativeKeyListener {
                 break;
             case NativeKeyEvent.VC_K:
                 if (CTRL) {
-                    CTRL = false;
                     // 当按下Ctrl + K时，QuickPanel存在时，即关闭这个Panel.
                     if (QuickPanelOn) {
                         System.out.println("Shut down the existing panel");
                         Platform.runLater(() -> {
                             QuickPanelOn = false;
                             QuickNote.closePanel();
+                            QuickNoteStage = null;
                         });
                     } else {
                         System.out.println("Call on a panel for writing.");
                         // 调用JavaFX线程来更新GUI
                         Platform.runLater(() -> {
                             QuickPanelOn = true;
-                            QuickNote.getQuickNote();
+                            QuickNoteStage = QuickNote.getQuickNote();
                         });
                     }
                 }
@@ -65,17 +68,56 @@ public class GlobalKeyListener implements NativeKeyListener {
                 }
                 break;
             case NativeKeyEvent.VC_ENTER:
-                if (CTRL) {
-                    CTRL = false;
+                if (CTRL && QuickNoteStage != null) {
                     StringClip.playBeep();
                     QuickNote.submit();
                 }
+                break;
+            case NativeKeyEvent.VC_UP:
+                if (CTRL && QuickNoteStage != null) {
+                    Platform.runLater(() -> {
+                        // we should pay attention that, the downside is the positive direction.
+                        double y = QuickNoteStage.getY() - 10;
+                        QuickNoteStage.setY(y);
+                    });
+                }
+                break;
+            case NativeKeyEvent.VC_DOWN:
+                if (CTRL && QuickNoteStage != null) {
+                    Platform.runLater(() -> {
+                        double y = QuickNoteStage.getY() + 10;
+                        QuickNoteStage.setY(y);
+                    });
+                }
+                break;
+            case NativeKeyEvent.VC_LEFT:
+                if (CTRL && QuickNoteStage != null) {
+                    Platform.runLater(() -> {
+                        double x = QuickNoteStage.getX() - 10;
+                        QuickNoteStage.setX(x);
+                    });
+                }
+                break;
+            case NativeKeyEvent.VC_RIGHT:
+                if (CTRL) {
+                    Platform.runLater(() -> {
+                        double x = QuickNoteStage.getX() + 10;
+                        QuickNoteStage.setX(x);
+                    });
+                }
+                break;
             default:
                 CTRL = false;
         }
     }
 
-    public void nativeKeyReleased(NativeKeyEvent e) {}
+    // 这样就可以解决Ctrl释放后，依然等待的问题。
+    public void nativeKeyReleased(NativeKeyEvent e) {
+        if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL) {
+//            System.out.println("release CTRL");
+            CTRL = false;
+        }
+    }
 
     public void nativeKeyTyped(NativeKeyEvent e) {}
 
