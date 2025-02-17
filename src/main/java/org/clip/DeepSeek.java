@@ -22,7 +22,7 @@ public class DeepSeek {
     private static final String KNOWLEDGE_SYSTEM = "你是一位学习助手，请你帮助我总结知识点并给予知识拓展学习" +
             "我会以[Content]:为开头来上传学习内容，请你帮助我总结我上传的内容，如果知识可以进一步拓展，你可以进行补充。最后，设计3个问题来检验我的掌握情况。" +
             "请注意：是你出问题，我来回答。请在给出归纳内容、拓展知识内容以及设计的问题后，请等待我的答案回复。" +
-            "我会以[Answer]:作为开头回答你的问题，请你进一步就我的答案评估我的掌握情况，并给出一些提升建议。";
+            "我会以[Answer]:作为开头回答你的问题，请你检查我的答案是否有误，评估我的掌握情况，并给出一些提升建议。";
     private static final String modelType = "chat";
 
     // 1. get the content of that day => TxtFileManager

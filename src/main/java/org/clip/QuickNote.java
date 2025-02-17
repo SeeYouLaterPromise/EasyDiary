@@ -1,6 +1,5 @@
 package org.clip;
 
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -41,7 +40,7 @@ public class QuickNote {
     // Submit the content of the text area to a file
     public static void submit() {
         String text = textArea.getText();
-        String entry = "[Thought]:\n" + text;
+        String entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text;
         TxtFileManager txtFileManager = new TxtFileManager();
         txtFileManager.WriteToFile(entry, true);
 

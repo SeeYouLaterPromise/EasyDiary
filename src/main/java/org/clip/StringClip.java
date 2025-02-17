@@ -5,7 +5,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.time.LocalDate;
 
 public class StringClip {
     private static String[] records;
@@ -42,7 +41,7 @@ public class StringClip {
             }
             // Remove all types of newlines (\n and \r\n)
 //            String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
-            String entry = "[Excerpt]:\n" + text;
+            String entry = "[Excerpt] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text;
             TxtFileManager txtFileManager = new TxtFileManager();
 
             txtFileManager.WriteToFile(entry, true);

@@ -1,42 +1,39 @@
 # Easy-Diary
-提升: 复盘 + 制定计划
-
-- 目标 = 理想 + 截止日期
-- 想要变强就要做一个`清晰`的人
-
-Aimed for help you `look back on yourself`.
 
 ## Main page (display data)
 ![codeStats.png](src/main/resources/image/codeStats.png)
 
-That is inspired by this web application: https://codestats.net! We encourage programmers to use it!
+The display of MainPanel is inspired by this web application: https://codestats.net! 
 
-运行程序入口：`MainPanel`
+I also encourage programmers to use it!
 
-- 制作一个如图所示的年历来展示用户这一整年的使用laptop的学习情况
+JavaFX is selected for GUI building.
+
+运行程序入口：`MainPanel`.
+
+功能简介：
+- 制作一个如图所示的年历来展示用户这一整年的使用`Easy-Diary`的学习情况。
 ![EasyDiary.png](src/main/resources/image/EasyDiary.png)
-面板中的年份和每个月的天数都是`LocateDate`中获取的，确保对于年年有效且闰年二月天数的问题也得到解决。
-> A Calendar to track the whole year usage of "learning mode" of user.
-- 系统获取当前年月日信息，当用户点击年历里面的项时判断：
-  - 如果是过去（昨天以及之前）：调出一个panel来回顾那些使用learning mode产生的数据。
+面板中的年份和每个月的天数是根据`LocateDate`中动态更新的，所以哪怕是2035年依然奏效。
+
+- RULEs:
+  - 面板中每一天的数值是用户在`当天使用Learning Mode的时长`。
+  - 用户可以点击面板中的具体一天：
+  - 如果是过去 (`Learn from your past`)，你可以回顾那一天的`Excerpts`和`Thoughts`，并留下`Remark`，但是不可以修改过去存在的内容。
     - ![pastPanel.png](src/main/resources/image/pastPanel.png)
-  - 如果是现在（今天）：调出一个panel来观察今天使用learning mode产生的数据。
+  - 如果是现在 (`Seize your day!`)，你可以修改今天的一切，把握今天的一切吧！
     - ![currentPanel.png](src/main/resources/image/currentPanel.png)
-  - 如果是未来（明天以及之后）：调出一个panel让用户在这个panel里面可以写下对那一天的计划规划。
+  - 如果是未来 (`Plan your future`)，你对未来只能憧憬和规划，别急！
     - ![futurePanel.png](src/main/resources/image/futurePanel.png)
 
-
-
-### JavaFX for GUI dev
-![javaFX.png](src/main/resources/image/javaFX.png)
-
 ## Learning mode (collect data)
-用户在开启`learning mode`之前先让他输入一个`关键词`来确定他在做什么工作，便于后续数据管理。
-
-- **Excerpt**: 当按下 Ctrl+C，选中的句子会被摘录下来。
-  - `StringClip.java`: You can learn how to use `Toolkit` and `Clipboard`.
-- **Thought**: 当按下 Ctrl+K，将会快速调出一个panel供用户快速记录下此刻感想。
-  - `QuickNoteApp.java`: You can learn how to use `Swing` and `Singleton mode`.
+- **GlobalListener**: 默认关闭。开启后可使用快捷键：
+  - **Excerpt**: 当按下 `Ctrl+C`，选中的句子会被摘录下来。听到系统提示音，代表摘录成功。
+    - `StringClip.java`: `Toolkit` and `Clipboard`.
+  - **Thought**: 当按下 `Ctrl+K`，将会快速调出一个panel供用户快速记录下此刻感想。
+    - `QuickNote.java`: `Singleton mode`.
+    - 按下`Ctrl+Enter`，可以快速提交panel中的内容。
+  - 当按下`Ctrl+Esc`，可以快速Learning Mode。
 
 ### Local storage scheme
 > 在 Maven 项目中，resources 文件夹用于存放所有 非 Java 代码的资源文件，如配置文件、静态资源、文本文件、图片等。
@@ -47,18 +44,8 @@ version 0 for `.txt` file storage, I just focus on the core logic development.
 - `year` and `month` are both directory.
 - `day` is the data file.
 
-Later on, when I have some collaboration friends, let us add `database` something else!
+Later on, when I have some collaboration friends, let us add `database`!
 
-
-
-## LLM API
-你需要在resource文件下新建一个`api_key.txt`文件来存储你的deepseek的api启用LLM的调用。
-
-> ATTENTION!!! If you post request via HTTP, you should do encoding with `UTF-8` for chinese words.
-
-## Let AI help you organize what you learn today.
-1. First stage: text, users' excerpts and thoughts.
-2. Second stage: image users uploaded. such as some do-wrong question.
 
 ## Question learning method
 ![QALearn.png](src/main/resources/image/QALearn.png)
@@ -66,9 +53,9 @@ When you input one or several paragraph (which can be called `knowledge`), we wi
 
 In this way, you can answer these questions to enhance your understanding.  
 
-Cruel Mode: If your answer is not so good (`how to quantify the quantity of the answer.`), we wouldn't let you continue (`so how?`).
+> TODO: Cruel Mode: If your answer is not so good (`how to quantify the quantity of the answer.`), we wouldn't let you continue (`so how?`).
 
-## Shadowing method for english learning
+## Future work: Shadowing method for english learning
 User can input `sentences`, then we will help you transform `text` into `audio` for you to shadowing-ly read.
 
 ### TTSs I tried in 2025.02.08
@@ -89,4 +76,4 @@ User can input `sentences`, then we will help you transform `text` into `audio` 
   
   但有一说一，这个发音很机械化啊。。还得找别的解决方案
 
-### for oral training 
+### for oral conversion training 

@@ -1,2 +1,5 @@
-有保存吗？
+1. Platform.runLater()能够保证将操作提交到JavaFX线程中完成，从而保证UI线程来对UI进行操作。如果不使用Platform.runLater()更新UI会抛出IllegalException的错误。
 
+2. CMU Sphinx是开源的语音库，适合本地部署；而Google Cloud Speech-to-Text API是商业调用API，会收取一定的费用，但语音质量会更高。如果不追求高质量语音服务，可以选择CMU Sphinx。
+
+3. 首先，需要调用语音识别函数来识别用户通过麦克风传入的音频数据，将其转换为文本；将生成的文本传入NLP功能函数生成回应文本；最后将回应文本传入文本生成语音函数生成音频播放给用户听；循环整个流程，实现人机对话功能。

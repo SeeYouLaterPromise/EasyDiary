@@ -25,6 +25,11 @@ public class CertainDay {
     private static Stage certainDayStage = null;
     private static CertainDay certainDay = null;
 
+    // TODO:
+    //  1. webview to show markdown.
+    //  2. MenuBar for some setting configuration.
+    //  3. light/dark theme switch.
+
 
     private CertainDay() {
         LocalDate currentDate = LocalDate.now();
@@ -116,7 +121,7 @@ public class CertainDay {
                 // JavaFX线程处理GUI逻辑
                 Platform.runLater(() -> {
                     textAreaDeepSeek.setText(res);
-                    textAreaRemark.setText(textAreaRemark.getText() + res);
+                    textAreaRemark.setText(textAreaRemark.getText() + "\n\n" + res);
                 });
 
                 // 将DeepSeek返回的内容 追加到左边的Content区域。
@@ -136,26 +141,32 @@ public class CertainDay {
             new Thread(() -> {
                 // 发送答案
                 String answer = "[You] - " + TxtFileManager.getCurrentTimeString() + ":\n" + textAreaYou.getText();
+
                 appendFileContent("Remark",  answer);
 
                 Platform.runLater(() -> {
-                    textAreaYou.setText(textAreaYou.getText() + "\n请耐心等待回复。");
+                    textAreaRemark.setText(textAreaRemark.getText() + "\n\n" + answer);
+                    textAreaYou.setText(textAreaYou.getText() + "\n\n请耐心等待回复。");
                 });
 
                 // 发送网络请求
                 String res = "[DeepSeek] - " + TxtFileManager.getCurrentTimeString() + ":\n" + DeepSeek.answerQuestion(textAreaYou.getText());
+                System.out.println("得到回复！");
 
                 // JavaFX线程处理GUI逻辑
                 Platform.runLater(() -> {
-                    textAreaDeepSeek.setText(textAreaDeepSeek.getText() + res);
-                    textAreaRemark.setText(textAreaRemark.getText() + res);
+                    // 提醒用户进度
+                    textAreaYou.setText(textAreaYou.getText() + "\n\n已回复，请查看！");
+                    textAreaDeepSeek.setText(textAreaDeepSeek.getText() + "\n\n" + res);
+                    textAreaRemark.setText(textAreaRemark.getText() + "\n\n" + res);
                 });
 
                 // 将DeepSeek返回的内容 追加到左边的Remark区域。
                 appendFileContent("Remark", res);
 
                 // 缓存
-                appendFileContent("You", res);
+//                appendFileContent("You", answer);
+                appendFileContent("DeepSeek", res);
             }).start();
         });
 
