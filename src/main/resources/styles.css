@@ -1,15 +1,23 @@
 #year-title {
-    -fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #5e9ed6;
+    -fx-font-size: 35px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5e9ed6;
 }
 
 .label {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-text-fill: #4a4a4a;
     -fx-padding: 2px;
     -fx-background-color: #f1f1f1;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 10px;
+    /*-fx-border-color: #e0e0e0;*/
+    /*-fx-border-radius: 10px;*/
 }
+
+#Label-head {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
 
 .event-table {
     -fx-font-size: 14px;

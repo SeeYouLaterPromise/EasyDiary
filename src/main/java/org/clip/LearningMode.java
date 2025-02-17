@@ -1,6 +1,5 @@
 package org.clip;
 
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -61,21 +60,76 @@ public class LearningMode{
         LmPanel = panel();
     }
 
-    public static Stage getLmPanel() {
+    private static Label durationLabel = null;
+
+    // to record the usage duration of learning mode.
+    private static long startTime;
+
+    public static Stage getLmPanel(Label label) {
         if (learningMode == null) {
             learningMode = new LearningMode();
+            durationLabel = label;
+            // 记下当前时间
+            startTime = System.currentTimeMillis();
         }
         return LmPanel;
     }
 
+    private static void setLearningDuration() {
+        String existingDuration = durationLabel.getText();
+
+        // accumulate duration function.
+        // 提取已经存在的时间
+        int seconds = ExtractExistingSeconds(existingDuration);
+
+
+        long endTime = System.currentTimeMillis();
+        seconds += (int) (( endTime - startTime ) / 1000);  // seconds
+
+        // one day at most 24h.
+        int hour = seconds / 3600;
+        if (hour != 0) {
+            durationLabel.setText(hour + "h");
+            return;
+        }
+
+        int minute = seconds / 60;
+        if (minute != 0) {
+            durationLabel.setText(minute + "m");
+            return;
+        }
+
+        durationLabel.setText(seconds + "s");
+    }
+
+    public static int ExtractExistingSeconds(String existingDuration) {
+        int seconds = Integer.parseInt(existingDuration.substring(0, existingDuration.length() - 1));
+        switch (existingDuration.charAt(existingDuration.length() - 1)) {
+            case 'h':
+                seconds *= 3600;
+                break;
+            case 'm':
+                seconds *= 60;
+                break;
+        }
+        return seconds;
+    }
+
     // TODO: 将这些子窗口抽象成一个父类，让这里的closePanel...
     public static void closePanel() {
-        MainPanel.updateState();
-        if (LmPanel != null) LmPanel.hide();
-        // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
+        // 关闭开启着的其他功能
         if (write) QuickNote.closePanel();
         if (listened) GlobalKeyListener.shutDownMode();
+
+        // 更新主面板的时长
+        setLearningDuration();
+
+        // 推出学习模式后，调出先前隐藏的学习面板
         MainPanel.showMainPanel();
+
+        // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
+        MainPanel.updateState();
+        if (LmPanel != null) LmPanel.hide();
         learningMode = null;
     }
 

@@ -13,20 +13,22 @@ JavaFX is selected for GUI building.
 
 功能简介：
 - 制作一个如图所示的年历来展示用户这一整年的使用`Easy-Diary`的学习情况。
-![EasyDiary.png](src/main/resources/image/EasyDiary.png)
-面板中的年份和每个月的天数是根据`LocateDate`中动态更新的，所以哪怕是2035年依然奏效。
+  - 面板中的年份和每个月的天数是根据`LocateDate`动态更新的，所以哪怕是2035年依然奏效。
 
 - RULEs:
   - 面板中每一天的数值是用户在`当天使用Learning Mode的时长`。
+    - ![MainPanel.png](src/main/resources/image/MainPanel.png)
   - 用户可以点击面板中的具体一天：
-  - 如果是过去 (`Learn from your past`)，你可以回顾那一天的`Excerpts`和`Thoughts`，并留下`Remark`，但是不可以修改过去存在的内容。
+  - 如果是`过去` (`Learn from your past`)，你可以回顾那一天的`Excerpts`和`Thoughts`，并留下`Remark`，但是不可以修改过去存在的内容。
     - ![pastPanel.png](src/main/resources/image/pastPanel.png)
-  - 如果是现在 (`Seize your day!`)，你可以修改今天的一切，把握今天的一切吧！
+  - 如果是`现在` (`Seize your day!`)，你可以修改今天的一切，把握今天的一切吧！
     - ![currentPanel.png](src/main/resources/image/currentPanel.png)
-  - 如果是未来 (`Plan your future`)，你对未来只能憧憬和规划，别急！
+  - 如果是`未来` (`Plan your future`)，你对未来只能憧憬和规划，别急！
     - ![futurePanel.png](src/main/resources/image/futurePanel.png)
 
 ## Learning mode (collect data)
+打开`学习模式`后，会默认隐藏`主面板`；退出`学习模式`后，会自动调出隐藏的`主面板`。
+![LearningMode.png](src/main/resources/image/LearningMode.png)
 - **GlobalListener**: 默认关闭。开启后可使用快捷键：
   - **Excerpt**: 当按下 `Ctrl+C`，选中的句子会被摘录下来。听到系统提示音，代表摘录成功。
     - `StringClip.java`: `Toolkit` and `Clipboard`.

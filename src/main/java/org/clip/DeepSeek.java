@@ -15,8 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class DeepSeek {
-    // TODO: 当点击过去的某一天是，绑定在Remark标签上吧：开启子线程调用;
-    //       本类方法来对Content内容进行`归纳`以及`生成`一些问题在Remark部分。
     private static final String BASE_URL = "https://api.deepseek.com/chat/completions";
     private static final String TEST_SYSTEM = "You are a helpful assistant.";
     private static final String KNOWLEDGE_SYSTEM = "你是一位学习助手，请你帮助我总结知识点并给予知识拓展学习" +
@@ -138,8 +136,8 @@ public class DeepSeek {
             generatedText = "Error: Received non-OK HTTP response: " + statusCode + "\nResponse body: " + responseString;
         } else {
             // 打印响应内容，帮助调试
-            // FIXME: What I found without `toString()`, there is no content printed.
-//                System.out.println("API Response: " + responseString.toString());
+            // What I found without `toString()`, there is no content printed.
+            // System.out.println("API Response: " + responseString.toString());
             // 解析并处理有效响应
             JSONObject jsonResponse = new JSONObject(responseString.toString());
 
