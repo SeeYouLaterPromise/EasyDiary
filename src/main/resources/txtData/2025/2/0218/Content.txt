@@ -1,0 +1,80 @@
+[Excerpt] - 2025-02-18 10:40:44 +0800:
+// 创建一个定时器任务来定期检查剪切板内容
+        Timer timer = new Timer(true); // 使用守护线程来定时检查
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                String currentClipboardContent = getClipboardContent();
+                if (!currentClipboardContent.equals(lastClipboardContent)) {
+                    // 如果剪切板内容发生变化，打印新内容
+                    System.out.println("Clipboard updated: " + currentClipboardContent);
+                    lastClipboardContent = currentClipboardContent; // 更新上次的剪切板内容
+                }
+            }
+        }, 0, 1000); // 每 1 秒检查一次剪切板
+
+[Thought] - 2025-02-18 10:40:57 +0800:
+守护线程是什么？
+
+[Excerpt] - 2025-02-18 10:44:16 +0800:
+// 启动一个定时任务监听剪切板内容变化
+    private void startClipboardListener() {
+        Timer timer = new Timer(true); // 使用守护线程来定时检查
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                String currentClipboardContent = getClipboardContent();
+                if (!currentClipboardContent.equals(lastClipboardContent)) {
+                    // 如果剪切板内容发生变化，打印新内容
+                    System.out.println("Clipboard updated: " + currentClipboardContent);
+                    lastClipboardContent = currentClipboardContent; // 更新上次的剪切板内容
+                }
+            }
+        }, 0, 1000); // 每 1 秒检查一次剪切板
+    }
+
+[Excerpt] - 2025-02-18 11:02:33 +0800:
+JAVA中的线程主要分为两类：用户线程（User Thread）和守护线程(Daemon Thread)。JAVA语言中无论是线程还是线程池，默认都是用户线程，因此用户线程也被称为普通线程。守护线程也被称之为后台线程、服务线程或精灵线程，守护线程是为用户线程服务的，当线程中的用户线程都执行结束后，守护线程也会跟随结束。守护线程具有自动结束生命周期的特性，而非守护线程则不具备该特性。
+
+[Excerpt] - 2025-02-18 11:11:25 +0800:
+LocalDate 
+
+[Excerpt] - 2025-02-18 11:13:15 +0800:
+当你调用 LocalDate.now() 时，它会根据你系统的默认时区来返回日期。也就是说，如果你的计算机时区设置为 "Asia/Shanghai"（即北京时间），LocalDate.now() 会返回北京时区的当前日期。如果你将系统时区设置为 "America/New_York"（纽约时区），则 LocalDate.now() 会返回纽约时区的当前日期。
+
+[Excerpt] - 2025-02-18 11:13:47 +0800:
+LocalDate.now() 返回的日期受系统时区的影响，因此它可能在不同的时区返回不同的日期。如果你需要明确的时区信息，使用 ZonedDateTime 来确保日期的准确性。
+
+[Excerpt] - 2025-02-18 11:14:37 +0800:
+public class LocalTimeTaskExample {
+    public static void main(String[] args) {
+        // 获取本地时区
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        // 获取当前时间
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+
+        // 设置目标时间为今天的 18:00
+        ZonedDateTime targetTime = now.withHour(18).withMinute(0).withSecond(0).withNano(0);
+
+        // 如果目标时间已经过去，设置目标时间为明天的 18:00
+        if (now.isAfter(targetTime)) {
+            targetTime = targetTime.plusDays(1);
+        }
+
+        // 计算从当前时间到目标时间的延迟（毫秒）
+        long delay = Duration.between(now, targetTime).toMillis();
+
+        // 创建调度服务
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        // 创建定时任务
+        Runnable task = () -> {
+            System.out.println("Task executed at: " + ZonedDateTime.now(zoneId));
+        };
+
+        // 安排任务在指定时间执行
+        scheduler.schedule(task, delay, TimeUnit.MILLISECONDS);
+    }
+}
+

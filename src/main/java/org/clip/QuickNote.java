@@ -40,7 +40,7 @@ public class QuickNote {
     // Submit the content of the text area to a file
     public static void submit() {
         String text = textArea.getText();
-        String entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text;
+        String entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text + "\n";
         TxtFileManager txtFileManager = new TxtFileManager();
         txtFileManager.WriteToFile(entry, true);
 

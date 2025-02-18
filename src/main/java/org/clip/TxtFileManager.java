@@ -30,14 +30,15 @@ public class TxtFileManager {
         return num >= 10 ? String.valueOf(num) : "0" + num;
     }
 
+    private String getDayString(int month, int day) {return paddingZeroAhead(month) + paddingZeroAhead(day);}
+
     // TODO: 考虑定时任务解决跨越0：00的问题，但是初期我们先记下来，暂先不实现。
     private void DateToPath(LocalDate date, String type) {
-//        System.out.println("Here is TxtFileManager Class, you new an Instance: " + date.getYear() + ", Mon: " + date.getMonth() + ", Day: " + date.getDayOfMonth());
         int year = date.getYear();
         int month = date.getMonthValue();
         int day = date.getDayOfMonth();
-        StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/';
-        tempPath = type + '_' + paddingZeroAhead(month) + paddingZeroAhead(day) + ".txt";
+        StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/' + getDayString(month, day) + '/';
+        tempPath = type + ".txt";
         filePath = StoreDir + tempPath;
     }
 

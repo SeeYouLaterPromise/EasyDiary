@@ -6,10 +6,22 @@
 
 
 
-1. 学习时长按照`unit`来给予不同的背景颜色来呈现渐变色，从而美化界面。
-2. MeunBar来配置一些个性化设置：light/dark background.
-3. txt storage, xxx_0217，前面是不是形成一个目录比较好？
-4. 复制功能还不够全面，比如GPT上的按键复制，现在还不支持。
+- 初次运行`配置页`或者`login page`: 配置用户名; api_key调用deepseek。
+- 美化界面：
+   - 学习时长按照`unit`来给予不同的背景颜色来呈现渐变色。
+   - LearningMode状态栏美化
+   - QuickNotePanel美化
+- 主面板：
+  - TableView还没有做好，准备放一些目标计划；和learningMode联动。
+  > future work: 让AI帮我们做目标拆解。
+  - 做一个MenuBar来配置一些个性化设置：
+    - light/dark theme.
+    - 现在默认的是按键复制存储；网页点击复制开启与否的设置。
+- 持久化存储：
+  - txt storage, xxx_0217，后面是不是形成一个目录比较好？
+  - database.
+
+
 
 
 

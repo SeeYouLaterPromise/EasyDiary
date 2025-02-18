@@ -1,11 +1,18 @@
 # Easy-Diary
 
+## Motivation
+
+不知道是不是很多人和我一样，明白我们永远不会比此刻更年轻，所以总想记录下些什么以便未来的自己朝花夕拾。可是我总是坚持不下来，日记写一阵子就断更，似乎是魔咒。
+
+`EasyDiary`的初衷就是根据我们使用laptop学习产生的数据，让AI帮我们写一份日记初稿。这样，只要我们`keep learning`，在不经意间就日记就写好啦！
+
+此外，我还希望通过`EasyDiary`来让自己更清楚自己的一天。正如那句“你怎样度过一天，就会怎样度过一生”。因此，在`EasyDiary`，我会探索如何更好的做好时间规划，拓宽生命的厚度！
+> 24h oneday = 8h sleep + 3h eat and rest + 1h exercise + 12h free allocation (Learning or entertainment)
+
 ## Main page (display data)
-![codeStats.png](src/main/resources/image/codeStats.png)
 
-The display of MainPanel is inspired by this web application: https://codestats.net! 
-
-I also encourage programmers to use it!
+> The display of MainPanel is inspired by this web application: https://codestats.net! I also encourage programmers to use it!
+> ![codeStats.png](src/main/resources/image/codeStats.png)
 
 JavaFX is selected for GUI building.
 
@@ -29,25 +36,26 @@ JavaFX is selected for GUI building.
 ## Learning mode (collect data)
 打开`学习模式`后，会默认隐藏`主面板`；退出`学习模式`后，会自动调出隐藏的`主面板`。
 ![LearningMode.png](src/main/resources/image/LearningMode.png)
-- **GlobalListener**: 默认关闭。开启后可使用快捷键：
-  - **Excerpt**: 当按下 `Ctrl+C`，选中的句子会被摘录下来。听到系统提示音，代表摘录成功。
+- **GlobalListener**: 默认关闭 (状态栏第二项：`Listen off`.)。点击`Listen off`可开启按键监听模式，可使用快捷键：
+  - 当按下 `Ctrl+C`，选中的句子会被摘录下来。听到系统提示音，代表摘录成功。 **[Excerpt] - timestamp**
     - `StringClip.java`: `Toolkit` and `Clipboard`.
-  - **Thought**: 当按下 `Ctrl+K`，将会快速调出一个panel供用户快速记录下此刻感想。
+  - 当按下 `Ctrl+K`，将会快速调出一个panel供用户快速记录下此刻感想。**[Thought] - timestamp**
     - `QuickNote.java`: `Singleton mode`.
-    - 按下`Ctrl+Enter`，可以快速提交panel中的内容。
-  - 当按下`Ctrl+Esc`，可以快速Learning Mode。
-  - 当按下`Ctrl+方向键`，可以按照你的意愿自由移动`QuickNotePanel`的位置。
+    - 按下`Ctrl+Enter`，可以快速提交panel中的内容。听到系统提示音，代表成功。
+    - 当按下`Ctrl+方向键`，可以按照你的意愿自由移动`QuickNotePanel`的位置。
+  - 当按下`Ctrl+Esc`，可以快速推出`Learning Mode`。听到系统提示音，代表成功。
 
 ### Local storage scheme
 > 在 Maven 项目中，resources 文件夹用于存放所有 非 Java 代码的资源文件，如配置文件、静态资源、文本文件、图片等。
 
 version 0 for `.txt` file storage, I just focus on the core logic development.
 
-`year_month_day` hierarchy:
-- `year` and `month` are both directory.
-- `day` is the data file.
+`year_month_day_type` hierarchy:
+- `year`, `month` and `day` are both directories.
+- `type` is data txt file.
 
-Later on, when I have some collaboration friends, let us add `database`!
+Later on, when I have some collaboration friends, let us add `database` connection!
+> What is the core of database?
 
 
 ## Question learning method

@@ -19,16 +19,58 @@ import javafx.util.Duration;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainPanel extends Application {
 
     // TODO: Login update or configuration.
     private String userName = "llyexin";
-
-    // TODO: 跨越0：00的问题，以后有时间再考虑
     private LocalDate currentDate = LocalDate.now();
-    private final int year = currentDate.getYear();
+    private int year = currentDate.getYear();
+
+    private void updateCurrentDate() {
+        // 获取本地时区
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        // 获取当前时间
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+
+        // 设置目标时间为今天的 23:59:59
+        ZonedDateTime targetTime = now.withHour(23).withMinute(59).withSecond(59).withNano(0);
+
+        // 如果目标时间已经过去，设置目标时间为明天的 23:59:59
+        if (now.isAfter(targetTime)) {
+            targetTime = targetTime.plusDays(1);
+        }
+
+        // 计算从当前时间到目标时间的延迟（毫秒）
+        long delay = java.time.Duration.between(now, targetTime).toMillis();
+
+        // 创建调度服务
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        // 创建定时任务
+        Runnable task = () -> {
+            // Add a delay (1s) to ensure LocateDate updated already.
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                System.err.println(ex.getMessage());
+            }
+
+            currentDate = LocalDate.now();
+            year = currentDate.getYear();
+        };
+
+        // 安排任务在指定时间执行
+        scheduler.schedule(task, delay, TimeUnit.MILLISECONDS);
+    }
+
 
     // TODO: used for display your plan today
     private TableView<String> tableView;
@@ -63,8 +105,6 @@ public class MainPanel extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(LocalDate.now().getMonthValue());
-        System.out.println(LocalDate.now().getDayOfMonth());
         launch(args);
     }
 
