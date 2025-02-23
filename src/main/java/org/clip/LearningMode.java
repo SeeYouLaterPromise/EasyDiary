@@ -73,6 +73,9 @@ public class LearningMode{
             durationLabel = label;
             // 记下当前时间
             startTime = System.currentTimeMillis();
+
+            // FX only for GUI stuff.
+            new Thread(ActiveWindowTracker::setupTracker).start();
         }
         return LmPanel;
     }
@@ -85,19 +88,17 @@ public class LearningMode{
 
         // accumulate duration function.
         // 提取已经存在的时间
-        int seconds = ExtractExistingSeconds(existingDuration);
+        long seconds = DurationManager.getSeconds(existingDuration);
 
 
         long endTime = System.currentTimeMillis();
-        seconds += (int) (( endTime - startTime ) / 1000);  // seconds
+        seconds += ( endTime - startTime ) / 1000;  // seconds
 
         // one day at most 24h.
-        int hour = seconds / 3600;
+        int hour = (int) seconds / 3600;
         seconds %= 3600;
-        String content = hour + "h";
 
-
-        int minute = seconds / 60;
+        int minute = (int) seconds / 60;
         seconds %= 60;
 
         // MainPanel display from the major part.
@@ -106,35 +107,10 @@ public class LearningMode{
         else durationLabel.setText(seconds + "s");
 
         // store in the .txt file.
-        content = content + "_" + minute + "m_" + seconds + "s";
+        String content = hour + "h_" + minute + "m_" + seconds + "s";
         txtFileManager.WriteToFile(content, false);
     }
 
-    private static int getSeconds(char unit) {
-        switch (unit) {
-            case 'h': return 3600;
-            case 'm': return 60;
-            case 's': return 1;
-        }
-        return 0;
-    }
-
-    /**
-     * format as "xxh_xxm_xxs"
-     * @param existingDuration
-     * @return
-     */
-    public static int ExtractExistingSeconds(String existingDuration) {
-        int seconds = 0;
-        String[] components = existingDuration.split("_");
-        for (String component : components) {
-            int end = component.length() - 1;
-            char unit = component.charAt(end);
-            int figure = Integer.parseInt(component.substring(0, end));
-            seconds += figure * getSeconds(unit);
-        }
-        return seconds;
-    }
 
     // TODO: 将这些子窗口抽象成一个父类，让这里的closePanel...
     public static void closePanel() {
@@ -145,7 +121,10 @@ public class LearningMode{
         // 更新主面板的时长
         setLearningDuration();
 
-        // 推出学习模式后，调出先前隐藏的学习面板
+        // 关闭Tracker
+        ActiveWindowTracker.shutDown();
+
+        // 退出学习模式后，调出先前隐藏的学习面板
         MainPanel.showMainPanel();
 
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
@@ -175,8 +154,6 @@ public class LearningMode{
         labelHBox.setAlignment(Pos.CENTER);
 
         // Create Buttons (Submit & Fix)
-
-
         Button fixedButton = getFixedButton(stage);
         listenedButton = getListenerButton();
         quickNoteButton = getQuickNoteButton();

@@ -1,0 +1,6 @@
+AppName	UsageTime
+WeChat.exe	0h_0m_13s
+java.exe	0h_0m_33s
+msedge.exe	0h_0m_12s
+cloudmusic.exe	0h_0m_23s
+idea64.exe	0h_3m_15s

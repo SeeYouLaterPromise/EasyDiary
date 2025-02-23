@@ -26,6 +26,17 @@ public class TxtFileManager {
         return now.format(formatter);
     }
 
+    public static String getCurrentTimeString(String format) {
+        // 获取当前的日期时间和时区
+        ZonedDateTime now = ZonedDateTime.now();
+
+        // 自定义格式：例如 "yyyy-MM-dd HH:mm:ss Z"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+
+        // 格式化 ZonedDateTime
+        return now.format(formatter);
+    }
+
     private String paddingZeroAhead(int num) {
         return num >= 10 ? String.valueOf(num) : "0" + num;
     }
@@ -40,6 +51,11 @@ public class TxtFileManager {
         StoreDir = StoreDir + "TxtData/" + year + '/' + month + '/' + getDayString(month, day) + '/';
         tempPath = type + ".txt";
         filePath = StoreDir + tempPath;
+    }
+
+    public boolean isFileExisting() {
+        File file = new File(filePath);
+        return file.exists();
     }
 
     private void ensureDirectory() {
@@ -130,7 +146,6 @@ public class TxtFileManager {
         return content.toString().split("#");
     }
 
-    // 读取文件内容的方法
     public String readFileContent() {
         StringBuilder content = new StringBuilder();
 
