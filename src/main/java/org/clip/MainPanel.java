@@ -2,6 +2,7 @@ package org.clip;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -115,13 +116,15 @@ public class MainPanel extends Application {
         // ModeOn, then shut down mode.
         if (ModeOn) LearningMode.closePanel();
         Label todayLabel = (Label) calendarGrid.lookup(todayLabelId);
-        // 持久化存储学习时长
-        TxtFileManager txtFileManager = new TxtFileManager(currentDate, "LearningDuration");
-        txtFileManager.WriteToFile(todayLabel.getText(), false);
+        // 持久化存储学习时长 改在learning退出时更新
+//        TxtFileManager txtFileManager = new TxtFileManager(currentDate, "LearningDuration");
+//        txtFileManager.WriteToFile(todayLabel.getText(), false);
     }
 
     @Override
     public void start(Stage primaryStage) {
+        Platform.setImplicitExit(false); // 关键：禁止隐式退出
+
         stage = primaryStage;
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> {
@@ -255,7 +258,8 @@ public class MainPanel extends Application {
             for (int j = 1; j <= LengthOfMonth; j++) {
                 TxtFileManager txtFileManager = new TxtFileManager(LocalDate.of(year, i, j), "LearningDuration");
                 String content = txtFileManager.readFileContent().replace("\n", "");
-                content = content.isEmpty() ? "0h" : content;
+
+                content = content.isEmpty() ? "0h" : extractMajorDuration(content.split("_"));
                 Label label = new Label(content);
                 label.setId(i + "_" + j);
                 gridPane.add(label, j, i);
@@ -264,6 +268,23 @@ public class MainPanel extends Application {
 
 
         return gridPane;
+    }
+
+    private String extractMajorDuration(String[] content) {
+        // 兼容之前的方案
+        if (content.length == 1) {
+            return content[0];
+        }
+
+        String labelContent;
+        if (!content[0].equals("0h")) {
+            labelContent = content[0];
+        } else if(!content[1].equals("0m")) {
+            labelContent = content[1];
+        } else {
+            labelContent = content[2];
+        }
+        return labelContent;
     }
 }
 

@@ -10,6 +10,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.time.LocalDate;
+
 public class LearningMode{
     private static final double height = 150;
     private static final double width = 300;
@@ -76,7 +78,10 @@ public class LearningMode{
     }
 
     private static void setLearningDuration() {
-        String existingDuration = durationLabel.getText();
+        // 每次应该从txt文件中读最新的时间
+        TxtFileManager txtFileManager = new TxtFileManager(LocalDate.now(), "LearningDuration");
+
+        String existingDuration = txtFileManager.readFileContent().replace("\n", "");
 
         // accumulate duration function.
         // 提取已经存在的时间
@@ -88,29 +93,45 @@ public class LearningMode{
 
         // one day at most 24h.
         int hour = seconds / 3600;
-        if (hour != 0) {
-            durationLabel.setText(hour + "h");
-            return;
-        }
+        seconds %= 3600;
+        String content = hour + "h";
+
 
         int minute = seconds / 60;
-        if (minute != 0) {
-            durationLabel.setText(minute + "m");
-            return;
-        }
+        seconds %= 60;
 
-        durationLabel.setText(seconds + "s");
+        // MainPanel display from the major part.
+        if (hour != 0) durationLabel.setText(hour + "h");
+        else if (minute != 0) durationLabel.setText(minute + "m");
+        else durationLabel.setText(seconds + "s");
+
+        // store in the .txt file.
+        content = content + "_" + minute + "m_" + seconds + "s";
+        txtFileManager.WriteToFile(content, false);
     }
 
+    private static int getSeconds(char unit) {
+        switch (unit) {
+            case 'h': return 3600;
+            case 'm': return 60;
+            case 's': return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * format as "xxh_xxm_xxs"
+     * @param existingDuration
+     * @return
+     */
     public static int ExtractExistingSeconds(String existingDuration) {
-        int seconds = Integer.parseInt(existingDuration.substring(0, existingDuration.length() - 1));
-        switch (existingDuration.charAt(existingDuration.length() - 1)) {
-            case 'h':
-                seconds *= 3600;
-                break;
-            case 'm':
-                seconds *= 60;
-                break;
+        int seconds = 0;
+        String[] components = existingDuration.split("_");
+        for (String component : components) {
+            int end = component.length() - 1;
+            char unit = component.charAt(end);
+            int figure = Integer.parseInt(component.substring(0, end));
+            seconds += figure * getSeconds(unit);
         }
         return seconds;
     }
