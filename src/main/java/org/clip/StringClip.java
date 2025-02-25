@@ -19,7 +19,7 @@ public class StringClip {
         toolkit = Toolkit.getDefaultToolkit();
         clipboard = toolkit.getSystemClipboard();
         records = new String[50];
-        lastClipboardContent = getClipboardContent();
+//        lastClipboardContent = getClipboardContent();
     }
 
     public static void playBeep() {

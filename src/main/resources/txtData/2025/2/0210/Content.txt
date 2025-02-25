@@ -1,6 +1,6 @@
 [Excerpt]:
 Exception in thread "JNativeHook Dispatch Thread" java.lang.ExceptionInInitializerError
-	at org.clip.QuickNote.<clinit>(QuickNote.java:18)
+	at org.clip.GUI.QuickNote.<clinit>(QuickNote.java:18)
 	at org.clip.GlobalKeyListener.nativeKeyPressed(GlobalKeyListener.java:39)
 	at com.github.kwhat.jnativehook.GlobalScreen$EventDispatchTask.processKeyEvent(GlobalScreen.java:559)
 	at com.github.kwhat.jnativehook.GlobalScreen$EventDispatchTask.run(GlobalScreen.java:524)

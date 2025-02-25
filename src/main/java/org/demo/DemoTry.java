@@ -1,6 +1,6 @@
 package org.demo;
 
-import org.clip.LearningMode;
+import org.clip.DurationManager;
 
 import java.util.Scanner;
 
@@ -10,7 +10,7 @@ public class DemoTry {
         Scanner scanner = new Scanner(System.in);
         String time = scanner.next();
 
-        int seconds = LearningMode.ExtractExistingSeconds(time);
+        long seconds = DurationManager.getSeconds(time);
 
         System.out.println("Total seconds: " + seconds);
     }

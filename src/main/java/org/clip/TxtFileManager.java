@@ -100,7 +100,7 @@ public class TxtFileManager {
         ensure();
     }
 
-    TxtFileManager (LocalDate date, String type) {
+    public TxtFileManager(LocalDate date, String type) {
         DateToPath(date, type);
         ensure();
     }

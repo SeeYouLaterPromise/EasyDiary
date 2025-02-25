@@ -1,0 +1,36 @@
+/* 让整个窗口背景圆角 */
+.root {
+    -fx-background-color: rgba(30, 136, 229, 0.95); /* 半透明蓝色 */
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-border-color: #1e88e5;
+    -fx-border-width: 2px;
+    -fx-background-insets: 0, 1; /* 处理边框问题 */
+}
+
+/* 时间显示文本 */
+.label-time {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+/* 状态栏文字样式 */
+.label-status {
+    -fx-font-size: 18px;
+    -fx-text-fill: #e3f2fd;  /* 浅蓝色 */
+    -fx-font-style: italic;
+}
+
+/* 按钮盒子样式 */
+.hbox-buttons {
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+
+/* 底部状态栏 */
+.hbox-buttons {
+    -fx-background-color: rgba(25, 118, 210, 0.9);
+    -fx-background-radius: 15px;
+    -fx-padding: 10px;
+}

@@ -1,4 +1,4 @@
-package org.clip;
+package org.clip.GUI;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -12,6 +12,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.clip.DeepSeek;
+import org.clip.TxtFileManager;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -69,7 +71,7 @@ public class CertainDay {
     private void closePanel() {
         certainDayStage.hide();
         certainDay = null;
-        MainPanel.showMainPanel();
+        MainPanel.show();
     }
 
     private void hideCertainDayPanel() {

@@ -37,10 +37,10 @@ public class DeepSeek {
         return call(KNOWLEDGE_SYSTEM, answer);
     }
 
-    //
-    public static void main(String[] args) {
-        System.out.println(call(TEST_SYSTEM, "hello"));
-    }
+    // for you to test your api call is correct.
+//    public static void main(String[] args) {
+//        System.out.println(call(TEST_SYSTEM, "hello"));
+//    }
 
     public static String call(String system, String prompt) {
         String res = "";

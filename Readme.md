@@ -44,6 +44,8 @@ JavaFX is selected for GUI building.
     - 按下`Ctrl+Enter`，可以快速提交panel中的内容。听到系统提示音，代表成功。
     - 当按下`Ctrl+方向键`，可以按照你的意愿自由移动`QuickNotePanel`的位置。
   - 当按下`Ctrl+Esc`，可以快速推出`Learning Mode`。听到系统提示音，代表成功。
+- **ActiveWindowTracker**: 捕捉用户在使用`learningMode`时，`focus`在`App`上的总时间；以及`窗口切换链`。
+- **FaceExpressionAnalyser**: 分析用户在使用`learningMode`面部表情，从而推断用户的心情，为AI日记做BackUp。（待开发）
 
 ### Local storage scheme
 > 在 Maven 项目中，resources 文件夹用于存放所有 非 Java 代码的资源文件，如配置文件、静态资源、文本文件、图片等。

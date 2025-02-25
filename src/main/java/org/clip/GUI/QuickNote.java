@@ -1,5 +1,6 @@
-package org.clip;
+package org.clip.GUI;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,7 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import org.clip.TxtFileManager;
 
 public class QuickNote {
     private static final double height = 300;
@@ -23,19 +26,63 @@ public class QuickNote {
     // 单例 懒汉模式
     private static QuickNote quickNote = null;
     private static Stage noteStage = null;
+
+    public static void show() {
+        if (noteStage != null) {
+            noteStage.show();
+        }
+    }
+
+    public static void hide() {
+        if (noteStage != null) {
+            noteStage.hide();
+        }
+    }
     private QuickNote() {
         noteStage = NewPanel();
     }
     public static Stage getQuickNote() {
         if (quickNote == null) {
             quickNote = new QuickNote();
-            LearningMode.toggleWrite();
-            LearningMode.updateQuickNoteButtonState();
-        } else {
-//            System.out.println("You already have one!");
         }
         return noteStage;
     }
+
+    public static void moveUp() {
+        noteStage.setY(noteStage.getY() - 10);
+    }
+
+    public static void moveDown() {
+        noteStage.setY(noteStage.getY() + 10);
+    }
+
+    public static void moveLeft() {
+        noteStage.setX(noteStage.getX() - 10);
+    }
+
+    public static void moveRight() {
+        noteStage.setX(noteStage.getX() + 10);
+    }
+
+    public static void move(int direction) {
+        switch (direction) {
+            case NativeKeyEvent.VC_UP:
+                moveUp();
+                break;
+            case NativeKeyEvent.VC_DOWN:
+                moveDown();
+                break;
+            case NativeKeyEvent.VC_LEFT:
+                moveLeft();
+                break;
+            case NativeKeyEvent.VC_RIGHT:
+                moveRight();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     // Submit the content of the text area to a file
     public static void submit() {
@@ -50,9 +97,7 @@ public class QuickNote {
     }
 
     public static void closePanel() {
-        if (noteStage != null) noteStage.hide();
-        LearningMode.toggleWrite();
-        LearningMode.updateQuickNoteButtonState();
+        QuickNote.hide();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
         quickNote = null;
     }
@@ -63,9 +108,12 @@ public class QuickNote {
 
         // Handling the close event to ensure the app exits properly
         stage.setOnCloseRequest((WindowEvent we) -> {
-            System.out.println("Hide Quick Note GUI.");
-//            System.exit(0);
             we.consume(); // Prevent the default behavior (window closing)
+
+            // 注意这个不要写在closePanel()里面，会互相二次调用。
+            StateManager.switchQuickPanelState();
+
+            // 清空引用
             closePanel();
         });
 
@@ -144,6 +192,7 @@ public class QuickNote {
         stage.setX(screenBounds.getMaxX() - stage.getWidth() - 20);
         stage.setY(screenBounds.getMaxY() - stage.getHeight() - 30);
         // Show the stage after positioning
+        stage.initStyle(StageStyle.UTILITY);
         stage.show();
         return stage;
     }

@@ -1,4 +1,4 @@
-package org.clip;
+package org.clip.GUI;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -9,13 +9,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import org.clip.TxtFileManager;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +34,13 @@ public class MainPanel extends Application {
     // TODO: Login update or configuration.
     private String userName = "llyexin";
     private LocalDate currentDate = LocalDate.now();
+
+    // 为处理跨年学习的情况，不设置为final
     private int year = currentDate.getYear();
 
+    private final Label yearLabel = new Label(userName + "'s " + year);
+
+    // 为解决跨越0：00问题而创建的定时任务
     private void updateCurrentDate() {
         // 获取本地时区
         ZoneId zoneId = ZoneId.systemDefault();
@@ -66,6 +73,7 @@ public class MainPanel extends Application {
 
             currentDate = LocalDate.now();
             year = currentDate.getYear();
+            yearLabel.setText(userName + "'s " + year);
         };
 
         // 安排任务在指定时间执行
@@ -88,6 +96,10 @@ public class MainPanel extends Application {
     private static Stage stage = null;
     private GridPane calendarGrid = null;
     private final String todayLabelId = "#" + currentDate.getMonthValue() + "_" + currentDate.getDayOfMonth();
+    private static Label todayLabel = null;
+    public static Label getTodayLabel() {
+        return todayLabel;
+    }
 
     /**
      * for learning mode shutdown, update the status in the main panel to remind user.
@@ -97,11 +109,11 @@ public class MainPanel extends Application {
         LearningModeOnButton.setText("Start up learning mode!");
     }
 
-    public static void showMainPanel() {
+    public static void show() {
         stage.show();
     }
 
-    public static void hideMainPanel() {
+    public static void hide() {
         stage.hide();
     }
 
@@ -109,40 +121,74 @@ public class MainPanel extends Application {
         launch(args);
     }
 
-    @Override
-    public void stop() {}
-
     private void closePanel () {
         // ModeOn, then shut down mode.
         if (ModeOn) LearningMode.closePanel();
-        Label todayLabel = (Label) calendarGrid.lookup(todayLabelId);
-        // 持久化存储学习时长 改在learning退出时更新
-//        TxtFileManager txtFileManager = new TxtFileManager(currentDate, "LearningDuration");
-//        txtFileManager.WriteToFile(todayLabel.getText(), false);
+
+    }
+
+    // 显示信息窗口
+    private void showMessage(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        Platform.setImplicitExit(false); // 关键：禁止隐式退出
+    public void stop() throws Exception {}
 
+    @Override
+    public void start(Stage primaryStage) {
         stage = primaryStage;
 
+        // 通常没有任何FX窗口后，FX线程就会自动执行退出。
+        Platform.setImplicitExit(false); // 关键：禁止隐式退出
+
+        // 系统栏托盘
+        TrayMenu.getTrayIcon();
+
+        // 定时任务来处理跨越0：00问题
+        new Thread(this::updateCurrentDate).start();
+
+        // 点击后上角关闭按钮的行为
         primaryStage.setOnCloseRequest((WindowEvent we) -> {
-            System.out.println("Hide MainPanel GUI.");
-//            we.consume(); // Prevent the default behavior (window closing)
-            closePanel();
-            System.exit(0);
+            we.consume(); // Prevent the default behavior (window closing)
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("退出程序");
+            alert.setHeaderText(null);
+            alert.setContentText("是否退出程序？");
+
+            // 获取 Alert 的 Stage
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+
+            // 设置 Icon
+            alertStage.getIcons().add(new Image(Objects.requireNonNull(TrayMenu.class.getClassLoader().getResourceAsStream("puzzle0.png"))));
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get().equals(ButtonType.OK)){
+                // 确认后退出
+                closePanel();
+//                Platform.exit();
+                System.exit(0);
+            } else if (result.get().equals(ButtonType.CANCEL)) {
+                // 点击取消为最小化: 隐藏面板
+//                Platform.exit(); 这个会退出FX线程
+                MainPanel.hide();
+            }
+
         });
 
         // 设置根布局
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
 
-        // 创建年份标题
-        Label yearLabel = new Label(userName + "'s " + currentDate.getYear());
+        // 创建年份Label的ID
         yearLabel.setId("year-title");
 
-        // 创建日期按钮（1-31）
+        // 创建日历组件
         calendarGrid = createCalendarGrid();
 
         // 创建 TableView 用于显示选择日期的事件
@@ -178,11 +224,14 @@ public class MainPanel extends Application {
 
                         getCertainDayPanel(TargetDate);
                         // 打开学习模式后，隐藏主面板
-                        hideMainPanel();
+                        hide();
                     });
                 }
             }
         }
+
+        // bind the todayLabel
+        todayLabel = (Label) calendarGrid.lookup(todayLabelId);
 
         // Learning start and stop management.
         LearningModeOnButton.setOnAction(event -> {
@@ -192,8 +241,8 @@ public class MainPanel extends Application {
             } else {
                 // remind user the status.
                 LearningModeOnButton.setText("Shut down learning mode.");
-                Stage LmStage = LearningMode.getLmPanel((Label) calendarGrid.lookup(todayLabelId));
-                hideMainPanel();
+                LearningMode.setupLearningMode((Label) calendarGrid.lookup(todayLabelId));
+                hide();
             }
             ModeOn = !ModeOn;
         });
@@ -216,6 +265,10 @@ public class MainPanel extends Application {
         primaryStage.setHeight(Height); // 设置子窗口的高度
         primaryStage.setTitle("Easy Diary");
         primaryStage.setScene(scene);
+
+//        primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/puzzle0.png"))));
         primaryStage.show();
     }
 

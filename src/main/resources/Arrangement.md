@@ -4,6 +4,12 @@
 - 想要变强就要做一个`清晰`的人
 
 
+刚刚在看视频看到一个新的改进方向：
+快速调出deepseek对话窗口，进行知识询问，
+后台记录对话记录，提炼归纳知识点。
+（还要进一步阅读deepseek技术文档，学习深度思考中思考部分的调用以及流式调用。）
+
+ym聊天启发：概括成一句话
 
 
 - 初次运行`配置页`或者`login page`: 配置用户名; api_key调用deepseek。
@@ -11,6 +17,7 @@
    - 学习时长按照`unit`来给予不同的背景颜色来呈现渐变色。
    - LearningMode状态栏美化
    - QuickNotePanel美化
+   - CertainDayPanel -> webview to show markdown, code style.
 - 主面板：
   - TableView还没有做好，准备放一些目标计划；和learningMode联动。
   > future work: 让AI帮我们做目标拆解。
@@ -18,7 +25,7 @@
     - light/dark theme.
     - 现在默认的是按键复制存储；网页点击复制开启与否的设置。
 - 持久化存储：
-  - txt storage, xxx_0217，后面是不是形成一个目录比较好？
+  - txt storage, xxx_0217，后面是不是形成一个目录比较好？ fixed.
   - database.
 
 
