@@ -2,9 +2,11 @@ package org.clip.GUI;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
@@ -13,9 +15,11 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.clip.TxtFileManager;
 
+import java.util.Objects;
+
 public class QuickNote {
-    private static final double height = 300;
-    private static final double width = 300;
+    private static final double height = 350;
+    private static final double width = 350;
 
     private static final TextArea textArea = new TextArea();
     private static boolean submitted = false;
@@ -142,26 +146,25 @@ public class QuickNote {
                 }
             }
         });
-
         root.setCenter(textArea);
 
         // Create Buttons (Submit & Fix)
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
-        Button fixedButton = new Button("Not Fixed anymore.");
-        Button submitButton = new Button("Finish!");
+        Button fixedButton = new Button("unPin");
+        Button submitButton = new Button("Submit");
 
         // Fix/Unfix button functionality
         fixedButton.setOnAction(e -> {
-            // fixed indicates the status of `pin or not`
+            // fixed indicates the status of pin or not
             if (fixed) {
                 // if it has been fixed already, toggle it.
                 stage.setAlwaysOnTop(false);
                 // remind user the opposite action.
-                fixedButton.setText("Fix your panel!");
+                fixedButton.setText("Pin");
             } else {
                 stage.setAlwaysOnTop(true);
-                fixedButton.setText("Not Fixed anymore.");
+                fixedButton.setText("UnPin");
             }
             // toggle the status
             fixed = !fixed;
@@ -172,7 +175,12 @@ public class QuickNote {
             submit();
         });
 
-        buttonBox.getChildren().addAll(fixedButton, submitButton);
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> {
+            StateManager.switchQuickPanelState();
+        });
+
+        buttonBox.getChildren().addAll(fixedButton, submitButton, closeButton);
         root.setBottom(buttonBox);
 
 
@@ -180,6 +188,9 @@ public class QuickNote {
         Scene scene = new Scene(root, width, height);
 
         // Set the scene for the stage
+        // Set styles directly in Java code (You can use an external CSS file if needed)
+        scene.setFill(null); // Transparent background
+        scene.getStylesheets().add(Objects.requireNonNull(QuickNote.class.getResource("/quickNote.css")).toExternalForm());
         stage.setScene(scene);
 
         // if you don't do this, stage.getWidth() would be NaN.
@@ -192,8 +203,30 @@ public class QuickNote {
         stage.setX(screenBounds.getMaxX() - stage.getWidth() - 20);
         stage.setY(screenBounds.getMaxY() - stage.getHeight() - 30);
         // Show the stage after positioning
-        stage.initStyle(StageStyle.UTILITY);
+        stage.initStyle(StageStyle.TRANSPARENT);
+
+        // can be dragged.
+        enableDragging(stage, root);
+
+        // add icon.
+        stage.getIcons().add(new Image(Objects.requireNonNull(QuickNote.class.getResourceAsStream("/puzzle0.png"))));
+
         stage.show();
         return stage;
+    }
+
+    private static double xOffset = 0;
+    private static double yOffset = 0;
+
+    private static void enableDragging(Stage stage, Node root) {
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
     }
 }

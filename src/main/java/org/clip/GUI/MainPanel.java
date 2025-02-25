@@ -190,6 +190,7 @@ public class MainPanel extends Application {
 
         // 创建日历组件
         calendarGrid = createCalendarGrid();
+        calendarGrid.setId("calendar-grid");
 
         // 创建 TableView 用于显示选择日期的事件
         tableView = new TableView<>();
@@ -233,19 +234,6 @@ public class MainPanel extends Application {
         // bind the todayLabel
         todayLabel = (Label) calendarGrid.lookup(todayLabelId);
 
-        // Learning start and stop management.
-        LearningModeOnButton.setOnAction(event -> {
-            if (ModeOn) {
-                LearningModeOnButton.setText("Start up learning mode!");
-                LearningMode.closePanel();
-            } else {
-                // remind user the status.
-                LearningModeOnButton.setText("Shut down learning mode.");
-                LearningMode.setupLearningMode((Label) calendarGrid.lookup(todayLabelId));
-                hide();
-            }
-            ModeOn = !ModeOn;
-        });
 
         // 将年份标签放入一个HBox中，并设置HBox的对齐方式
         VBox vBox = new VBox(yearLabel, calendarGrid);
@@ -253,13 +241,13 @@ public class MainPanel extends Application {
         vBox.setPadding(new Insets(10));  // 可选：给HBox添加一些内边距，使其不至于紧贴边缘
 
         // 将元素添加到根布局
-        root.getChildren().addAll(vBox, tableView, LearningModeOnButton);
+        root.getChildren().addAll(vBox, tableView);
 
         // 创建并设置场景
         Scene scene = new Scene(root, Width, Height);
 
         // 添加CSS sheet
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/mainPanel.css")).toExternalForm());
 
         primaryStage.setWidth(Width);  // 设置子窗口的宽度
         primaryStage.setHeight(Height); // 设置子窗口的高度

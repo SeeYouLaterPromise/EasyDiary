@@ -1,0 +1,63 @@
+/* Quick Note Panel Styles */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #6AC1F1, #4D9DB6);  /* Gradient background from light blue to darker blue */
+    -fx-background-radius: 15px;     /* Rounded corners */
+    -fx-padding: 20px;               /* Padding for inner space */
+}
+
+/* Text area style */
+.text-area {
+    -fx-background-color: white;
+    -fx-border-radius: 10px;
+    -fx-font-size: 14px;             /* Adjusted font size */
+    -fx-text-fill: black;
+    -fx-padding: 10px;               /* Reduced padding for better fit */
+    -fx-pref-height: 120px;          /* Set a preferred height */
+    -fx-pref-width: 250px;           /* Set a preferred width */
+    -fx-border-color: #6AC1F1;      /* Light blue border to match theme */
+}
+
+/* Button style */
+.button {
+    -fx-background-color: #5C6BC0;  /* Muted blue background */
+    -fx-text-fill: white;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px 16px;          /* Smaller padding for a more compact button */
+    -fx-font-size: 12px;            /* Adjusted font size */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0, 1, 1); /* Button shadow for depth */
+}
+
+/* Button hover effect */
+.button:hover {
+    -fx-background-color: #3F51B5;  /* Darker blue when hovered */
+}
+
+/* Fixed button state style */
+.button:pressed {
+    -fx-background-color: #3949AB;  /* Even darker blue for pressed state */
+}
+
+/* Submit button style */
+.button.submit {
+    -fx-background-color: #03A9F4;  /* Sky blue background for submit button */
+    -fx-text-fill: white;
+    -fx-border-radius: 8px;
+}
+
+/* Tooltip for buttons */
+.button .tooltip {
+    -fx-background-color: #FF9800;
+    -fx-text-fill: white;
+}
+
+/* Container style for the whole window */
+.container {
+    -fx-padding: 20px;
+    -fx-alignment: center;
+}
+
+/* Change the layout of buttons */
+.buttonBox {
+    -fx-alignment: center;
+    -fx-spacing: 15px; /* Slightly more spacing between buttons */
+}

@@ -67,6 +67,7 @@ public class ActiveWindowTracker {
 
     private static long startTime = System.currentTimeMillis();
     private static boolean running = true;
+    private static boolean loseFocusAlready = false;
 
     private static String formattedEntry(String content) {
         return "-> [" + content + "] (" + TxtFileManager.getCurrentTimeString("HH:mm:ss") + ")";
@@ -89,9 +90,14 @@ public class ActiveWindowTracker {
             Pointer hwnd = User32.INSTANCE.GetForegroundWindow();
             if (hwnd == null) {
 //                System.err.println("没有找到活动窗口");
-                AppFocusChainFileManager.WriteToFile(formattedEntry("没有找到活动窗口"), true);
+                if (!loseFocusAlready) {
+                    // 避免无意义的记录太多遍的没有找到活动窗口
+                    loseFocusAlready = true;
+                    AppFocusChainFileManager.WriteToFile(formattedEntry("没有找到活动窗口"), true);
+                }
                 continue;
             }
+            loseFocusAlready = false;
 
             char[] windowText = new char[512]; // 用于存储窗口标题（Unicode版本）
             int length = User32.INSTANCE.GetWindowTextW(hwnd, windowText, windowText.length);
@@ -115,7 +121,7 @@ public class ActiveWindowTracker {
                 // 更新进程的使用时间
                 updateAppUsageTime(processName);
             } else {
-                AppFocusChainFileManager.WriteToFile(formattedEntry("活动窗口无标题(length < 0)"), true);
+                AppFocusChainFileManager.WriteToFile(formattedEntry("活动窗口无标题"), true);
             }
 
             try {

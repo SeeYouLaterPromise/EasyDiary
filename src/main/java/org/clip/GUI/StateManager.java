@@ -16,9 +16,17 @@ public class StateManager {
     public static void switchLearningMode() {
         // 现在状态是：On，switch做的事情就是off
         if (learningModeOn) {
-            Platform.runLater(LearningMode::closePanel);
+            Platform.runLater(() -> {
+                LearningMode.closePanel();
+                // 退出学习模式后，调出先前隐藏的学习面板
+                MainPanel.show();
+            });
         } else {
-            Platform.runLater(() -> LearningMode.setupLearningMode(MainPanel.getTodayLabel()));
+            Platform.runLater(() -> {
+                // 打开学习模式后，隐藏MainPanel
+                MainPanel.hide();
+                LearningMode.setupLearningMode(MainPanel.getTodayLabel());
+            });
         }
         learningModeOn = !learningModeOn;
 

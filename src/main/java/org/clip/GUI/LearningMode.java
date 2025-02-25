@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -150,9 +151,6 @@ public class LearningMode{
         // 关闭Tracker
         ActiveWindowTracker.shutDown();
 
-        // 退出学习模式后，调出先前隐藏的学习面板
-        MainPanel.show();
-
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
         MainPanel.updateState();
         LearningMode.hide();
@@ -188,7 +186,7 @@ public class LearningMode{
         // 创建 Scene 并加载 CSS 样式
         Scene scene = new Scene(root, width, height); // 设置窗口大小
         scene.getStylesheets().add(Objects.requireNonNull(
-                TrayMenu.class.getClassLoader().getResource("learning_mode.css")
+                TrayMenu.class.getClassLoader().getResource("learningMode.css")
         ).toExternalForm());
 
         // 设定 Scene
@@ -215,6 +213,9 @@ public class LearningMode{
 
         // 启用拖拽窗口
         enableDragging(stage, root);
+
+        // 加一个icon美化
+        stage.getIcons().add(new Image(Objects.requireNonNull(LearningMode.class.getResourceAsStream("/puzzle0.png"))));
 
         stage.show();
         return stage;

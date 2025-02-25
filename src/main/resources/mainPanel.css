@@ -1,3 +1,11 @@
+/* Ensure the calendar grid is centered */
+.calendar-grid {
+    -fx-alignment: center;  /* Center the content inside */
+    -fx-hgap: 10; /* Horizontal gap between columns */
+    -fx-vgap: 10; /* Vertical gap between rows */
+    -fx-padding: 20px; /* Padding to add spacing around the grid */
+}
+
 #year-title {
     -fx-font-size: 35px;
     -fx-font-weight: bold;
