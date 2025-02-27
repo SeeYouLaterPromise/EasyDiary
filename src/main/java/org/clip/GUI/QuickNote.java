@@ -15,6 +15,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.clip.TxtFileManager;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class QuickNote {
@@ -91,8 +92,16 @@ public class QuickNote {
     // Submit the content of the text area to a file
     public static void submit() {
         String text = textArea.getText();
-        String entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text + "\n";
-        TxtFileManager txtFileManager = new TxtFileManager();
+        // IF the first line user wrote is "PLAN", we should let the following content into the today's Plan txt file for storage.
+        String entry;
+        TxtFileManager txtFileManager;
+        if (text.split("\n")[0].equals("PLAN")) {
+            entry = text + "\n";
+            txtFileManager = new TxtFileManager(LocalDate.now(), "Plan");
+        } else {
+            entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text + "\n";
+            txtFileManager = new TxtFileManager();
+        }
         txtFileManager.WriteToFile(entry, true);
 
         // Optionally, you can add a Date to the entry before writing
@@ -228,5 +237,9 @@ public class QuickNote {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
+    }
+
+    public static void getFocus() {
+        textArea.requestFocus();
     }
 }

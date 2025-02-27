@@ -1,6 +1,7 @@
 /* Quick Note Panel Styles */
 .root {
-    -fx-background-color: linear-gradient(to bottom, #6AC1F1, #4D9DB6);  /* Gradient background from light blue to darker blue */
+    -fx-background-color: #003f88;
+    /*-fx-background-color: linear-gradient(to bottom, #36b9ff, #17adea);  !* Gradient background from light blue to darker blue *!*/
     -fx-background-radius: 15px;     /* Rounded corners */
     -fx-padding: 20px;               /* Padding for inner space */
 }
@@ -19,7 +20,7 @@
 
 /* Button style */
 .button {
-    -fx-background-color: #5C6BC0;  /* Muted blue background */
+    -fx-background-color: rgba(30, 136, 229, 0.95); /* 半透明蓝色 */
     -fx-text-fill: white;
     -fx-border-radius: 8px;
     -fx-padding: 8px 16px;          /* Smaller padding for a more compact button */
@@ -29,13 +30,13 @@
 
 /* Button hover effect */
 .button:hover {
-    -fx-background-color: #3F51B5;  /* Darker blue when hovered */
+    -fx-background-color: rgba(25, 118, 210, 0.9);  /* Darker blue when hovered */
 }
 
 /* Fixed button state style */
-.button:pressed {
-    -fx-background-color: #3949AB;  /* Even darker blue for pressed state */
-}
+/*.button:pressed {*/
+/*    -fx-background-color: #3949AB;  !* Even darker blue for pressed state *!*/
+/*}*/
 
 /* Submit button style */
 .button.submit {

@@ -143,6 +143,10 @@ public class MainPanel extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
 
+        // open the listener after opening the programme.
+        // further, we can set personal preference for user to decide.
+        StateManager.switchGlobalListener();
+
         // 通常没有任何FX窗口后，FX线程就会自动执行退出。
         Platform.setImplicitExit(false); // 关键：禁止隐式退出
 

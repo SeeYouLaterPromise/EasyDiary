@@ -39,7 +39,11 @@ public class StateManager {
         if (quickNoteOpen) {
             Platform.runLater(QuickNote::closePanel);
         } else {
-            Platform.runLater(QuickNote::getQuickNote);
+            Platform.runLater(() -> {
+                QuickNote.getQuickNote();
+                // Once opening the quickNotePanel, users can write immediately.
+                QuickNote.getFocus();
+            });
         }
         quickNoteOpen = !quickNoteOpen;
 

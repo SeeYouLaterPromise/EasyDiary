@@ -9,6 +9,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class StringClip {
+    private static final String CSDN_APPEND = "————————————————\n" +
+            "\n" +
+            "                            版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。";
     // 缓存功能，但是没什么必要；win11的win+V做的很好了。
     private static String[] records;
     private static int size = 0;
@@ -83,6 +86,8 @@ public class StringClip {
         }
         // Remove all types of newlines (\n and \r\n)
 //            String cleanedText = text.replaceAll("[\\r\\n]+", ""); // Removes both \n and \r\n
+        // clean the excerpt from CSDN
+        text = text.replaceAll(CSDN_APPEND, "");
         String entry = "[Excerpt] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text + "\n";
         TxtFileManager txtFileManager = new TxtFileManager();
 
