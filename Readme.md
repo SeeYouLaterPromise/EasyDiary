@@ -9,6 +9,8 @@
 此外，我还希望通过`EasyDiary`来让自己更清楚自己的一天。正如那句“你怎样度过一天，就会怎样度过一生”。因此，在`EasyDiary`，我会探索如何更好的做好时间规划，拓宽生命的厚度！
 > 24h oneday = 8h sleep + 3h eat and rest + 1h exercise + 12h free allocation (Learning or entertainment)
 
+每周日回顾自己的一周
+
 ## Main page (display data)
 
 > The display of MainPanel is inspired by this web application: https://codestats.net! I also encourage programmers to use it!
@@ -35,8 +37,15 @@ JavaFX is selected for GUI building.
 
 ## Learning mode (collect data)
 打开`学习模式`后，会默认隐藏`主面板`；退出`学习模式`后，会自动调出隐藏的`主面板`。
-![LearningMode.png](src/main/resources/image/LearningMode.png)
-- **GlobalListener**: 默认关闭 (状态栏第二项：`Listen off`.)。点击`Listen off`可开启按键监听模式，可使用快捷键：
+![learningmode.png](src/main/resources/image/learningmode.png)
+
+状态栏:
+* 点击最上方空白处可以支持状态栏变小化隐藏
+* 点击中间的时间处可以暂停计时
+* 点击最下方可以关闭全局监听功能
+
+功能：
+- **GlobalListener**: 默认打开；开启按键监听模式可使用快捷键：
   - 当按下 `Ctrl+C`，选中的句子会被摘录下来。听到系统提示音，代表摘录成功。 **[Excerpt] - timestamp**
     - `StringClip.java`: `Toolkit` and `Clipboard`.
   - 当按下 `Ctrl+K`，将会快速调出一个panel供用户快速记录下此刻感想。**[Thought] - timestamp**

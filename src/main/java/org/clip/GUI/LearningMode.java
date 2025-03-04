@@ -22,8 +22,9 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class LearningMode{
-    private static final double height = 120;
+    private static final double height = 130;
     private static final double width = 250;
 
     // lazy singleton mode.
@@ -51,38 +52,46 @@ public class LearningMode{
     // 创建时间显示
     private static final Label LearningDurationLabel = new Label("00:00:00");
 
-    private static void bindEventToLearningDurationLabel() {
-        // hide the learningModePanel
-        LearningDurationLabel.setOnMouseClicked(event -> {
-            hide();
-        });
-    }
     private static long currentSeconds = 0;
 
     // 使用守护线程来进行计时器任务
     private static Timer scheduler = null;
+    private static volatile boolean isPaused = false;
+
+    private static synchronized void togglePause() {
+        isPaused = !isPaused;
+    }
 
     private static void realTimeLearningDurationDisplay() {
         scheduler = new Timer(true);
         scheduler.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-               currentSeconds++;
-                Platform.runLater(() -> LearningDurationLabel.setText(DurationManager.getTimerString(currentSeconds)));
+                if (!isPaused) {
+                    currentSeconds++;
+                    // pass the `seconds` to get the formatted time string.
+                    Platform.runLater(() -> LearningDurationLabel.setText(DurationManager.getTimerString(currentSeconds)));
+                }
             }
-        }, 0, 1000); // 每 1 秒检查一次剪切板
+        }, 0, 1000); // 每 1 秒刷新一次
+    }
+
+    /**
+     * 点击屏幕中间的计时，暂停计时；再次点击，继续计时。
+     */
+    private static void bindEventToLearningDurationLabel() {
+        // hide the learningModePanel
+        LearningDurationLabel.setOnMouseClicked(event -> {
+//            hide();
+            isPaused = !isPaused;  // 目前没有并发困扰
+//            togglePause();
+        });
     }
 
     // 创建状态显示
     private static final String ListenerOnString = "* Listener is running...";
     private static final String ListenerOffString = "Listener is off";
     private static final Label listenerReminder = new Label(ListenerOffString);
-
-    private static void bindEventToListenerReminder() {
-        listenerReminder.setOnMouseClicked(event -> {
-            StateManager.switchGlobalListener();
-        });
-    }
 
     public static void setListenerReminderText(boolean on) {
         if (on) {
@@ -157,34 +166,116 @@ public class LearningMode{
         learningMode = null;
     }
 
+    /**
+     * 用来作为引线，当需要隐藏状态栏后再次打开的场景使用。
+     */
+    private static void fusePanel() {
+        Stage stage = new Stage();
+
+        stage.setAlwaysOnTop(true);
+        BorderPane root = new BorderPane();
+
+        HBox emptyHBox = new HBox();
+        emptyHBox.getStyleClass().add("hbox-buttons");
+
+
+        emptyHBox.setOnMouseClicked(event -> {
+            // 打开状态栏面部
+            show();
+            // 关闭本fuse面部
+            stage.hide();
+        });
+
+        root.setCenter(emptyHBox);
+
+
+        double h = 30;
+        double w = 30;
+        // 创建 Scene 并加载 CSS 样式
+        Scene scene = new Scene(root, w, h); // 设置窗口大小
+
+        // 导入CSS文件
+        scene.getStylesheets().add(Objects.requireNonNull(
+                TrayMenu.class.getClassLoader().getResource("learningMode.css")
+        ).toExternalForm());
+
+        // 设定 Scene
+        stage.setScene(scene);
+
+        // 设置窗口大小
+        stage.setHeight(h);
+        stage.setWidth(w);
+
+        // 让窗口在右上角显示
+        javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX(screenBounds.getMaxX() - stage.getWidth() - 10);
+        stage.setY(50);
+
+        // 设置窗口样式
+        stage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);  // 确保 Scene 透明
+
+        // 创建一个真正裁剪窗口的圆角矩形
+        Rectangle clip = new Rectangle(w, h);
+        clip.setArcWidth(40);
+        clip.setArcHeight(40);
+        root.setClip(clip);
+
+        // 启用拖拽窗口
+        enableDragging(stage, root);
+
+        // 加一个icon美化
+        stage.getIcons().add(new Image(Objects.requireNonNull(LearningMode.class.getResourceAsStream("/puzzle0.png"))));
+
+        stage.show();
+
+    }
+
     private static Stage panel() {
         Stage stage = new Stage();
         stage.setTitle("Learning mode");
 
+        // 通常没有任何FX窗口后，FX线程就会自动执行退出。
+        Platform.setImplicitExit(false); // 关键：禁止隐式退出
+
         bindEventToLearningDurationLabel();
-        bindEventToListenerReminder();
 
         stage.setAlwaysOnTop(true);
         BorderPane root = new BorderPane();
 
 
+        HBox emptyHBox = new HBox();
+        emptyHBox.getStyleClass().add("hbox-buttons");
+
+        // 绑定事件，暂时隐藏状态栏
+        emptyHBox.setOnMouseClicked(event -> {
+            hide();
+            fusePanel();
+        });
+
         LearningDurationLabel.getStyleClass().add("label-time"); // 设置样式
-        HBox labelHBox = new HBox(LearningDurationLabel);
-        labelHBox.setAlignment(Pos.CENTER);
+        HBox DurationLabelHBox = new HBox(LearningDurationLabel);
+        DurationLabelHBox.setAlignment(Pos.CENTER);
 
 
         listenerReminder.getStyleClass().add("label-status");
+        HBox reminderBox = new HBox(listenerReminder);
+        reminderBox.setAlignment(Pos.CENTER);
+        reminderBox.getStyleClass().add("hbox-buttons");
+        // listener on and off control
+        reminderBox.setOnMouseClicked(event -> {
+            StateManager.switchGlobalListener();
+        });
 
-        HBox hBox = new HBox(listenerReminder);
-        hBox.setAlignment(Pos.CENTER);
-        hBox.getStyleClass().add("hbox-buttons");
-
-
-        root.setCenter(labelHBox);
-        root.setBottom(hBox);
+        // 布局
+        root.setTop(emptyHBox);
+        root.setCenter(DurationLabelHBox);
+        root.setBottom(reminderBox);
 
         // 创建 Scene 并加载 CSS 样式
         Scene scene = new Scene(root, width, height); // 设置窗口大小
+
+        // 导入CSS文件
         scene.getStylesheets().add(Objects.requireNonNull(
                 TrayMenu.class.getClassLoader().getResource("learningMode.css")
         ).toExternalForm());

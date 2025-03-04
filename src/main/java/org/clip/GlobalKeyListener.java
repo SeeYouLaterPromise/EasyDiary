@@ -44,7 +44,7 @@ public class GlobalKeyListener implements NativeKeyListener {
                 // TODO: Call on a panel for user to write down.
                 break;
             case NativeKeyEvent.VC_ESCAPE:
-                // To exit the learning mode.
+                // To exit the listener
                 if (CTRL) {
                     StringClip.playBeep();
                     StateManager.switchGlobalListener();

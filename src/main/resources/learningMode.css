@@ -17,7 +17,7 @@
 
 /* 状态栏文字样式 */
 .label-status {
-    -fx-font-size: 18px;
+    -fx-font-size: 15px;
     -fx-text-fill: #e3f2fd;  /* 浅蓝色 */
     -fx-font-style: italic;
 }
