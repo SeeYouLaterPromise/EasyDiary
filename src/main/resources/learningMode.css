@@ -1,9 +1,18 @@
 /* 让整个窗口背景圆角 */
-.root {
+.root-running {
     -fx-background-color: rgba(30, 136, 229, 0.95); /* 半透明蓝色 */
     -fx-border-radius: 20px;
     -fx-background-radius: 20px;
     -fx-border-color: #1e88e5;
+    -fx-border-width: 2px;
+    -fx-background-insets: 0, 1; /* 处理边框问题 */
+}
+
+.root-pause {
+    -fx-background-color: #80ED99; /* 半透明蓝色 */
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-border-color: #80ED99;
     -fx-border-width: 2px;
     -fx-background-insets: 0, 1; /* 处理边框问题 */
 }
@@ -22,15 +31,19 @@
     -fx-font-style: italic;
 }
 
-/* 按钮盒子样式 */
-.hbox-buttons {
+/* 底部状态栏 */
+.hbox-running {
     -fx-padding: 10px;
     -fx-alignment: center;
+    -fx-background-color: rgba(25, 118, 210, 0.9);
+    -fx-background-radius: 15px;
+    -fx-padding: 10px;
 }
 
-/* 底部状态栏 */
-.hbox-buttons {
-    -fx-background-color: rgba(25, 118, 210, 0.9);
+.hbox-pause {
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-background-color: #45DFB1;
     -fx-background-radius: 15px;
     -fx-padding: 10px;
 }

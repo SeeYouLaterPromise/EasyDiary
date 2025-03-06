@@ -52,7 +52,10 @@ public class LearningMode{
     // 创建时间显示
     private static final Label LearningDurationLabel = new Label("00:00:00");
 
-    private static long currentSeconds = 0;
+
+    private static long learnSeconds = 0;
+
+    private static long pauseSeconds = 0;
 
     // 使用守护线程来进行计时器任务
     private static Timer scheduler = null;
@@ -68,9 +71,12 @@ public class LearningMode{
             @Override
             public void run() {
                 if (!isPaused) {
-                    currentSeconds++;
+                    learnSeconds++;
                     // pass the `seconds` to get the formatted time string.
-                    Platform.runLater(() -> LearningDurationLabel.setText(DurationManager.getTimerString(currentSeconds)));
+                    Platform.runLater(() -> LearningDurationLabel.setText(DurationManager.getTimerString(learnSeconds)));
+                } else {
+                    pauseSeconds++;
+                    Platform.runLater(() -> LearningDurationLabel.setText(DurationManager.getTimerString(pauseSeconds)));
                 }
             }
         }, 0, 1000); // 每 1 秒刷新一次
@@ -79,10 +85,31 @@ public class LearningMode{
     /**
      * 点击屏幕中间的计时，暂停计时；再次点击，继续计时。
      */
-    private static void bindEventToLearningDurationLabel() {
+    private static void bindEventToLearningDurationLabel(BorderPane root, HBox emptyBox, HBox reminderBox) {
         // hide the learningModePanel
         LearningDurationLabel.setOnMouseClicked(event -> {
-//            hide();
+
+            if (root.getStyleClass().contains("root-running")) {
+                root.getStyleClass().remove("root-running");
+                root.getStyleClass().add("root-pause");
+
+                emptyBox.getStyleClass().remove("hbox-running");
+                emptyBox.getStyleClass().add("hbox-pause");
+
+                reminderBox.getStyleClass().remove("hbox-running");
+                reminderBox.getStyleClass().add("hbox-pause");
+
+            } else if (root.getStyleClass().contains("root-pause")) {
+                root.getStyleClass().remove("root-pause");
+                root.getStyleClass().add("root-running");
+
+                emptyBox.getStyleClass().remove("hbox-pause");
+                emptyBox.getStyleClass().add("hbox-running");
+
+                reminderBox.getStyleClass().remove("hbox-pause");
+                reminderBox.getStyleClass().add("hbox-running");
+            }
+
             isPaused = !isPaused;  // 目前没有并发困扰
 //            togglePause();
         });
@@ -124,10 +151,10 @@ public class LearningMode{
 
         // accumulate duration function.
         // 提取已经存在的时间
-        long seconds = DurationManager.getSeconds(existingDuration) + currentSeconds;
+        long seconds = DurationManager.getSeconds(existingDuration) + learnSeconds;
 
         // 因为我发现，我关闭LearningMode重开之后，static变量好像没有重新初始化？
-        currentSeconds = 0;
+        learnSeconds = 0;
 
         // one day at most 24h.
         int hour = (int) seconds / 3600;
@@ -171,12 +198,13 @@ public class LearningMode{
      */
     private static void fusePanel() {
         Stage stage = new Stage();
+        stage.setTitle("fuse");
 
         stage.setAlwaysOnTop(true);
         BorderPane root = new BorderPane();
 
         HBox emptyHBox = new HBox();
-        emptyHBox.getStyleClass().add("hbox-buttons");
+        emptyHBox.getStyleClass().add("hbox-running");
 
 
         emptyHBox.setOnMouseClicked(event -> {
@@ -235,17 +263,16 @@ public class LearningMode{
         Stage stage = new Stage();
         stage.setTitle("Learning mode");
 
+        BorderPane root = new BorderPane();
+        root.getStyleClass().add("root-running");
+
         // 通常没有任何FX窗口后，FX线程就会自动执行退出。
         Platform.setImplicitExit(false); // 关键：禁止隐式退出
 
-        bindEventToLearningDurationLabel();
-
         stage.setAlwaysOnTop(true);
-        BorderPane root = new BorderPane();
-
 
         HBox emptyHBox = new HBox();
-        emptyHBox.getStyleClass().add("hbox-buttons");
+        emptyHBox.getStyleClass().add("hbox-running");
 
         // 绑定事件，暂时隐藏状态栏
         emptyHBox.setOnMouseClicked(event -> {
@@ -261,7 +288,8 @@ public class LearningMode{
         listenerReminder.getStyleClass().add("label-status");
         HBox reminderBox = new HBox(listenerReminder);
         reminderBox.setAlignment(Pos.CENTER);
-        reminderBox.getStyleClass().add("hbox-buttons");
+        reminderBox.getStyleClass().add("hbox-running");
+
         // listener on and off control
         reminderBox.setOnMouseClicked(event -> {
             StateManager.switchGlobalListener();
@@ -271,6 +299,9 @@ public class LearningMode{
         root.setTop(emptyHBox);
         root.setCenter(DurationLabelHBox);
         root.setBottom(reminderBox);
+
+        // label事件绑定
+        bindEventToLearningDurationLabel(root, emptyHBox, reminderBox);
 
         // 创建 Scene 并加载 CSS 样式
         Scene scene = new Scene(root, width, height); // 设置窗口大小
