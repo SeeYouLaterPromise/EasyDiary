@@ -172,12 +172,12 @@ public class MainPanel extends Application {
             alertStage.getIcons().add(new Image(Objects.requireNonNull(TrayMenu.class.getClassLoader().getResourceAsStream("puzzle0.png"))));
 
             Optional<ButtonType> result = alert.showAndWait();
-            if(result.get().equals(ButtonType.OK)){
+            if(result.isPresent() && result.get().equals(ButtonType.OK)){
                 // 确认后退出
                 closePanel();
 //                Platform.exit();
                 System.exit(0);
-            } else if (result.get().equals(ButtonType.CANCEL)) {
+            } else if (result.isPresent() && result.get().equals(ButtonType.CANCEL)) {
                 // 点击取消为最小化: 隐藏面板
 //                Platform.exit(); 这个会退出FX线程
                 MainPanel.hide();

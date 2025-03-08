@@ -57,10 +57,6 @@ public class StateManager {
         }
     }
 
-    public static void submitQuickPanel() {
-        if (quickNoteOpen) QuickNote.submit();
-    }
-
     public static void switchGlobalListener() {
         if (listenerOn) {
             GlobalKeyListener.shutDownMode();

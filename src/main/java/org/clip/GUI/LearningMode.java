@@ -83,7 +83,7 @@ public class LearningMode{
     }
 
     /**
-     * 点击屏幕中间的计时，暂停计时；再次点击，继续计时。
+     * 点击屏幕中间的计时，暂停计时；再次点击，继续计时。颜色改变逻辑
      */
     private static void bindEventToLearningDurationLabel(BorderPane root, HBox emptyBox, HBox reminderBox) {
         // hide the learningModePanel
@@ -204,7 +204,7 @@ public class LearningMode{
         BorderPane root = new BorderPane();
 
         HBox emptyHBox = new HBox();
-        emptyHBox.getStyleClass().add("hbox-running");
+        emptyHBox.getStyleClass().add("hbox-pause");
 
 
         emptyHBox.setOnMouseClicked(event -> {

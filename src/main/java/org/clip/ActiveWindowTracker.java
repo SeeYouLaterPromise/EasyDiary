@@ -68,6 +68,7 @@ public class ActiveWindowTracker {
     private static long startTime = System.currentTimeMillis();
     private static boolean running = true;
     private static boolean loseFocusAlready = false;
+    private static boolean windowWithoutTitle = false;
 
     private static String formattedEntry(String content) {
         return "-> [" + content + "] (" + TxtFileManager.getCurrentTimeString("HH:mm:ss") + ")";
@@ -103,6 +104,7 @@ public class ActiveWindowTracker {
             int length = User32.INSTANCE.GetWindowTextW(hwnd, windowText, windowText.length);
 
             if (length > 0) {
+                windowWithoutTitle = false;
                 String activeWindowTitle = new String(windowText, 0, length);
 
                 if (!activeWindowTitle.equals(lastActiveWindowTitle)) {
@@ -121,7 +123,10 @@ public class ActiveWindowTracker {
                 // 更新进程的使用时间
                 updateAppUsageTime(processName);
             } else {
-                AppFocusChainFileManager.WriteToFile(formattedEntry("活动窗口无标题"), true);
+                if (!windowWithoutTitle) {
+                    windowWithoutTitle = true;
+                    AppFocusChainFileManager.WriteToFile(formattedEntry("活动窗口无标题"), true);
+                }
             }
 
             try {

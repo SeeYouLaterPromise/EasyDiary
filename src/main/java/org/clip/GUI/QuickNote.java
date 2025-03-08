@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
@@ -99,7 +101,7 @@ public class QuickNote {
         String entry;
         TxtFileManager txtFileManager;
         if (text.split("\n")[0].equals("PLAN")) {
-            entry = text + "\n";
+            entry = text.replace("PLAN\n", "") + "\n";
             txtFileManager = new TxtFileManager(LocalDate.now(), "Plan");
         } else {
             entry = "[Thought] - " + TxtFileManager.getCurrentTimeString() + ":\n" + text + "\n";
@@ -160,6 +162,7 @@ public class QuickNote {
         });
         root.setCenter(textArea);
 
+        keyboardEvent(textArea);
         // Create Buttons (Submit & Fix)
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
@@ -225,6 +228,18 @@ public class QuickNote {
 
         stage.show();
         return stage;
+    }
+
+    private static void keyboardEvent(TextArea textArea) {
+        textArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER && !event.isControlDown()) {
+                // Enter 键默认换行
+                textArea.appendText("\n");
+                event.consume();  // 阻止冒泡，避免触发确认按钮
+            } else if (event.getCode() == KeyCode.ENTER && event.isControlDown()) {
+                submit();
+            }
+        });
     }
 
     private static double xOffset = 0;

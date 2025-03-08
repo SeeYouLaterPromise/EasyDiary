@@ -4,7 +4,9 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.clip.GUI.ManualEventMarker;
 import org.clip.GUI.StateManager;
 
 
@@ -43,17 +45,20 @@ public class GlobalKeyListener implements NativeKeyListener {
                 }
                 // TODO: Call on a panel for user to write down.
                 break;
+            case NativeKeyEvent.VC_M:
+                if (CTRL) {
+                    // 当按下Ctrl + M时，打开alert框供用户填写完成的事件内容
+                    Platform.runLater(()-> {
+                        ManualEventMarker.getManualEventMarker();
+                    });
+                }
+                // TODO: Call on a panel for user to write down.
+                break;
             case NativeKeyEvent.VC_ESCAPE:
                 // To exit the listener
                 if (CTRL) {
                     StringClip.playBeep();
                     StateManager.switchGlobalListener();
-                }
-                break;
-            case NativeKeyEvent.VC_ENTER:
-                if (CTRL) {
-                    StringClip.playBeep();
-                    StateManager.submitQuickPanel();
                 }
                 break;
             case NativeKeyEvent.VC_I:
