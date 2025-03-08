@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -283,6 +284,8 @@ public class CertainDay {
         stage.setScene(scene);
 //        stage.initStyle(StageStyle.UTILITY); // 改为无边框的现代窗口样式
 
+        // add the icon
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/puzzle0.png"))));
         stage.show();
         return stage;
     }

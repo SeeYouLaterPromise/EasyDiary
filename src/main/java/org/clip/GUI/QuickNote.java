@@ -49,6 +49,9 @@ public class QuickNote {
     public static Stage getQuickNote() {
         if (quickNote == null) {
             quickNote = new QuickNote();
+        } else {
+            // 这样就可以实现，写一半暂时隐藏
+            show();
         }
         return noteStage;
     }
@@ -112,7 +115,7 @@ public class QuickNote {
     public static void closePanel() {
         QuickNote.hide();
         // 置空引用来让垃圾回收机制回收内存；且方便单例再次调用
-        quickNote = null;
+//        quickNote = null;
     }
 
     private static Stage NewPanel() {
