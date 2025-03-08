@@ -86,8 +86,8 @@ public class MainPanel extends Application {
 
     // get the size of device screen
     private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private final double Height = screenSize.getHeight() / 2 + 200;
-    private final double Width = screenSize.getWidth() / 2 + 400;
+    private final double Height = screenSize.getHeight() * 0.6;
+    private final double Width = screenSize.getWidth() * 0.6;
 
     // learning mode function
     private static boolean ModeOn = false;
@@ -260,6 +260,7 @@ public class MainPanel extends Application {
 
 //        primaryStage.initStyle(StageStyle.UNDECORATED);
 
+        // add the icon
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/puzzle0.png"))));
         primaryStage.show();
     }

@@ -22,8 +22,8 @@ import java.util.Objects;
 
 public class CertainDay {
     private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private final double Height = screenSize.getHeight() / 2 + 200;
-    private final double Width = screenSize.getWidth() / 2 + 400;
+    private final double Height = screenSize.getHeight() * 0.6;
+    private final double Width = screenSize.getWidth() * 0.6;
     private static LocalDate date = null;
     private static Stage certainDayStage = null;
     private static CertainDay certainDay = null;
