@@ -10,6 +10,22 @@ public class StateManager {
 
     public static boolean listenerOn = false;
 
+    public static ManualEventMarker eventMarker = ManualEventMarker.getInstance();
+    public static boolean alertOn = false;
+
+    public static void switchEventMarker() {
+        if (!alertOn) {
+            Platform.runLater(()->{
+                eventMarker.getAlertBox();
+                // for immediate writing
+                eventMarker.getFocus();
+            });
+        }else {
+            Platform.runLater(()->eventMarker.close());
+        }
+        alertOn = !alertOn;
+    }
+
     /**
      * toggle the two states
      */
