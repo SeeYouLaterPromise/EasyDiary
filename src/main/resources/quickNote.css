@@ -10,7 +10,7 @@
 .text-area {
     -fx-background-color: white;
     -fx-border-radius: 10px;
-    -fx-font-size: 14px;             /* Adjusted font size */
+    -fx-font-size: 20px;             /* Adjusted font size */
     -fx-text-fill: black;
     -fx-padding: 10px;               /* Reduced padding for better fit */
     -fx-pref-height: 120px;          /* Set a preferred height */

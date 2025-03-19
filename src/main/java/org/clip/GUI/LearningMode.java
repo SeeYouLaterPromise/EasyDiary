@@ -99,6 +99,9 @@ public class LearningMode{
                 reminderBox.getStyleClass().remove("hbox-running");
                 reminderBox.getStyleClass().add("hbox-pause");
 
+                fuseHBox.getStyleClass().remove("hbox-running");
+                fuseHBox.getStyleClass().add("hbox-pause");
+
             } else if (root.getStyleClass().contains("root-pause")) {
                 root.getStyleClass().remove("root-pause");
                 root.getStyleClass().add("root-running");
@@ -108,6 +111,9 @@ public class LearningMode{
 
                 reminderBox.getStyleClass().remove("hbox-pause");
                 reminderBox.getStyleClass().add("hbox-running");
+
+                fuseHBox.getStyleClass().remove("hbox-pause");
+                fuseHBox.getStyleClass().add("hbox-running");
             }
 
             isPaused = !isPaused;  // 目前没有并发困扰
@@ -152,6 +158,7 @@ public class LearningMode{
         // accumulate duration function.
         // 提取已经存在的时间
         long seconds = DurationManager.getSeconds(existingDuration) + learnSeconds;
+        todayLabel.setStyle(todayLabel.getStyle() + DurationManager.getColor(seconds));
 
         // 因为我发现，我关闭LearningMode重开之后，static变量好像没有重新初始化？
         learnSeconds = 0;
@@ -196,6 +203,7 @@ public class LearningMode{
     /**
      * 用来作为引线，当需要隐藏状态栏后再次打开的场景使用。
      */
+    private final static HBox fuseHBox = new HBox();
     private static void fusePanel() {
         Stage stage = new Stage();
         stage.setTitle("fuse");
@@ -203,18 +211,18 @@ public class LearningMode{
         stage.setAlwaysOnTop(true);
         BorderPane root = new BorderPane();
 
-        HBox emptyHBox = new HBox();
-        emptyHBox.getStyleClass().add("hbox-pause");
+
+        fuseHBox.getStyleClass().add("hbox-running");
 
 
-        emptyHBox.setOnMouseClicked(event -> {
+        fuseHBox.setOnMouseClicked(event -> {
             // 打开状态栏面部
             show();
             // 关闭本fuse面部
             stage.hide();
         });
 
-        root.setCenter(emptyHBox);
+        root.setCenter(fuseHBox);
 
 
         double h = 30;

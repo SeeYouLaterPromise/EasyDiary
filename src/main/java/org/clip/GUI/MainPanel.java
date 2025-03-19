@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import org.clip.DurationManager;
 import org.clip.TxtFileManager;
 
 import java.awt.*;
@@ -94,7 +95,6 @@ public class MainPanel extends Application {
     private static final Button LearningModeOnButton = new Button("Start up learning mode!");
 
     private static Stage stage = null;
-    private GridPane calendarGrid = null;
     private final String todayLabelId = "#" + currentDate.getMonthValue() + "_" + currentDate.getDayOfMonth();
     private static Label todayLabel = null;
     public static Label getTodayLabel() {
@@ -193,7 +193,7 @@ public class MainPanel extends Application {
         yearLabel.setId("year-title");
 
         // 创建日历组件
-        calendarGrid = createCalendarGrid();
+        GridPane calendarGrid = createCalendarGrid();
         calendarGrid.setId("calendar-grid");
 
         // 创建 TableView 用于显示选择日期的事件
@@ -237,10 +237,13 @@ public class MainPanel extends Application {
 
         // bind the todayLabel
         todayLabel = (Label) calendarGrid.lookup(todayLabelId);
+        String todayStyle = "-fx-font-weight: bold;\n" +
+                "    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 2, 2);";
+        todayLabel.setStyle(todayLabel.getStyle() + todayStyle);
 
 
         // 将年份标签放入一个HBox中，并设置HBox的对齐方式
-        VBox vBox = new VBox(yearLabel, calendarGrid);
+        VBox vBox = new VBox(20, yearLabel, calendarGrid);
         vBox.setAlignment(Pos.CENTER);  // 设置HBox的内容居中
         vBox.setPadding(new Insets(10));  // 可选：给HBox添加一些内边距，使其不至于紧贴边缘
 
@@ -305,8 +308,16 @@ public class MainPanel extends Application {
                 TxtFileManager txtFileManager = new TxtFileManager(LocalDate.of(year, i, j), "LearningDuration");
                 String content = txtFileManager.readFileContent().replace("\n", "");
 
+                // 根据学习时长值，给予不同的css样式
+                String cssStyle = DurationManager.getColor(content);
+
+                // future `LearningDuration` file is empty, we give default value `0h`.
                 content = content.isEmpty() ? "0h" : extractMajorDuration(content.split("_"));
+
                 Label label = new Label(content);
+                // 梯度渲染学习时长
+                label.getStyleClass().add("calendar-cell");
+                label.setStyle(label.getStyle() + cssStyle);
                 label.setId(i + "_" + j);
                 gridPane.add(label, j, i);
             }

@@ -208,6 +208,11 @@ public class CertainDay {
         return stage;
     }
 
+    private void addIcon(Stage stage) {
+        // add the icon
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/puzzle0.png"))));
+    }
+
 
 
     // RULEs: 1. You cant modify the past existing content, but can leave `remark`; (Content + Remark)
@@ -284,8 +289,7 @@ public class CertainDay {
         stage.setScene(scene);
 //        stage.initStyle(StageStyle.UTILITY); // 改为无边框的现代窗口样式
 
-        // add the icon
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/puzzle0.png"))));
+        addIcon(stage);
         stage.show();
         return stage;
     }
@@ -350,6 +354,7 @@ public class CertainDay {
         stage.setScene(scene);
 //        stage.initStyle(StageStyle.UTILITY); // 改为无边框的现代窗口样式
 
+        addIcon(stage);
         stage.show();
         return stage;
     }
@@ -404,6 +409,7 @@ public class CertainDay {
         stage.setScene(scene);
 //        stage.initStyle(StageStyle.UTILITY); // 改为无边框的现代窗口样式
 
+        addIcon(stage);
         stage.show();
         return stage;
     }
